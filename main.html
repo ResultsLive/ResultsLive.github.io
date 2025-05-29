@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <br />
+        
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#Tab1">U13-U20 Scoring Results</a></li>
+            <li><a data-toggle="tab" href="#Tab2">U13-U20 Non Scoring Results</a></li>
+            <li><a data-toggle="tab" href="#Tab3">Quad Kids</a></li>
+            <li><a data-toggle="tab" href="#Tab4">Team Scores</a></li>
+            <li class="nav-item" onclick="pageLoad()"><a id="IntervalCounter">Updating.....</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" style="padding-top:10px;">
+            <div id="Tab1" class="tab-pane fade in active">
+                <div onclick="Refresh('Tab1')" class="form-inline text-center" style="margin-top: 5px; margin-bottom:10px">
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Filter Options</label>                  
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Age:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U13" name="U13" checked> U13
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U15" name="U15" checked> U15
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U17" name="U17" checked> U17
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Sex:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Female" name="Female" checked> Female
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Male" name="Male" checked> Male
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Events:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Track" name="Track" checked> Track
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Field" name="Field" checked> Field
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Show All:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab1')">All
+                        </label>
+                    </div>
+                </div>
+                <div id="tableResultsMain">Initialising...</div>
+            </div>
+            <div id="Tab2" class="tab-pane fade">
+                <div onclick="Refresh('Tab2')" class="form-inline text-center" style="margin-top: 5px; margin-bottom:10px">
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Filter Options</label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Age:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U13" name="U13" checked> U13
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U15" name="U15" checked> U15
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U17" name="U17" checked> U17
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U20" name="U20" checked> U20
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Sex:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Female" name="Female" checked> Female
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Male" name="Male" checked> Male
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Events:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Track" name="Track" checked> Track
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Field" name="Field" checked> Field
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Show All:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab2')">All
+                        </label>
+                    </div>
+                </div>
+                <div id="tableResultsNS">Initialising...</div>
+            </div>
+            <div id="Tab3" class="tab-pane fade">
+                <div onclick="Refresh('Tab3')" class="form-inline text-center" style="margin-top: 5px; margin-bottom:10px">
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Filter Options</label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Age:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U9" name="U9" checked> U9
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="U11" name="U11" checked> U11
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Sex:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Female" name="Female" checked> Female
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Male" name="Male" checked> Male
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-right: 20px;">
+                        <label>Events:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Track" name="Track" checked> Track
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Field" name="Field" checked> Field
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Show All:</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab3')">All
+                        </label>
+                    </div>
+                </div>
+                <div id="tableResultsQK">Initialising...</div>
+            </div>
+            <div id="Tab4" class="tab-pane fade">
+                <div id="tableScores">Initialising...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="index.js"></script>
+    <script type="text/javascript">window.onload = pageLoad();</script>
+</body>
+</html>
