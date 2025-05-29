@@ -2,21 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        @media (max-width: 767px) {
+            .nav-tabs {
+                border:0;
+                margin:0;
+            }
+            .nav-tabs li {
+                float: none;
+                width: 100%;
+                margin: 0;
+                border: 1px solid white;
+
+            }
+            .nav-tabs li.active {
+                border: 1px solid black;
+                margin:0
+            }
+            .nav-tabs li a {
+                border-radius:0;
+                border: 0;
+                margin: 0;
+                   
+             }
+             .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+                border:0;
+            }
+        }
+        
+    </style>
+
 </head>
 
 <body>
     <div class="container">
         <br />
-        
+
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#Tab1">U13-U20 Scoring Results</a></li>
             <li><a data-toggle="tab" href="#Tab2">U13-U20 Non Scoring Results</a></li>
             <li><a data-toggle="tab" href="#Tab3">Quad Kids</a></li>
             <li><a data-toggle="tab" href="#Tab4">Team Scores</a></li>
-            <li class="nav-item" onclick="pageLoad()"><a id="IntervalCounter">Updating.....</a>
+            <li class="nav-item" onclick="pageLoad()">
+                <a id="IntervalCounter">Updating.....</a>
             </li>
         </ul>
 
@@ -24,7 +56,7 @@
             <div id="Tab1" class="tab-pane fade in active">
                 <div onclick="Refresh('Tab1')" class="form-inline text-center" style="margin-top: 5px; margin-bottom:10px">
                     <div class="form-group" style="margin-right: 20px;">
-                        <label>Filter Options</label>                  
+                        <label>Filter Options</label>
                     </div>
                     <div class="form-group" style="margin-right: 20px;">
                         <label>Age:</label>
@@ -159,7 +191,10 @@
         </div>
 
     </div>
-
+    <button type="button" class="btn btn-danger btn-floating" id="btn-back-to-top" 
+            style="position: fixed; bottom: 20px; right: 20px; display: none;">
+    Top
+    </button>
     <script src="index.js"></script>
     <script type="text/javascript">window.onload = pageLoad();</script>
 </body>

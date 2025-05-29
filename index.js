@@ -1,3 +1,16 @@
+// === CONFIGURATION SECTION ===
+const API_BASE_URL =
+    window.location.hostname === ""
+        ? "https://localhost:7073" // Development API URL
+        : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; // Production API URL
+
+const API_ENDPOINTS = {
+    main: `${API_BASE_URL}/JSONMain`,
+    ns: `${API_BASE_URL}/jsonns`,
+    qk: `${API_BASE_URL}/JSONQK`,
+    scores: `${API_BASE_URL}/jsonscores`
+};
+
 var num = 0;
 var numUpdating = "";
 
@@ -221,11 +234,12 @@ function pageLoad() {
 
         const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
         const EventTab1 = filterConditionEvent('Tab1');
-        fetch("https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net/JSONMain")
+        fetch(API_ENDPOINTS.main)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
                 }
+                numUpdating = "";  //TOdo need error message on screen if this is the response
                 return response.json();
             })
             .then(data => {
@@ -234,12 +248,13 @@ function pageLoad() {
                 numUpdating = "";
             })
             .catch(error => {
+                numUpdating = "";
                 console.error("Error fetching JSON:", error); // TODO fix this
             });
 
         const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
         const EventTab2 = filterConditionEvent('Tab2');
-        fetch("https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net/JSONNS")
+        fetch(API_ENDPOINTS.ns)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
@@ -256,7 +271,7 @@ function pageLoad() {
 
         const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
         const EventTab3 = filterConditionEvent('Tab3');
-        fetch("https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net/JSONQK")
+        fetch(API_ENDPOINTS.qk)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
@@ -271,7 +286,7 @@ function pageLoad() {
                 console.error("Error fetching JSON:", error); // TODO fix this
             });
 
-        fetch("https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net/jsonscores")
+        fetch(API_ENDPOINTS.scores)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
@@ -309,3 +324,18 @@ function Refresh(divId) {
         tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
     }
 }
+
+
+// Scroll back to top button functionality
+window.onscroll = function () {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("btn-back-to-top").style.display = "block";
+    }
+    else {
+        document.getElementById("btn-back-to-top").style.display = "none";
+    }
+};
+
+document.getElementById("btn-back-to-top").addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
