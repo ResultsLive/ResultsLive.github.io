@@ -1,18 +1,18 @@
-// === CONFIGURATION SECTION ===
 const API_BASE_URL =
     window.location.hostname === ""
-        ? "https://localhost:7073" // Development API URL
-        : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; // Production API URL
+        ? "https://localhost:7073" : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; 
 
 const API_ENDPOINTS = {
-    main: `${API_BASE_URL}/JSONMain`,
-    ns: `${API_BASE_URL}/jsonns`,
-    qk: `${API_BASE_URL}/JSONQK`,
-    scores: `${API_BASE_URL}/jsonscores`
+    main:   `${API_BASE_URL}/JSONMain`,
+    ns:     `${API_BASE_URL}/JSONNS`,
+    qk:     `${API_BASE_URL}/JSONQK`,
+    scores: `${API_BASE_URL}/JSONScores`
 };
 
+var PollingTime = 5; // in minutes
 var num = 0;
 var numUpdating = "";
+var pageLoadTimeoutId = null; 
 
 setInterval(function () { 
     if (numUpdating == "Updating") {
@@ -102,12 +102,12 @@ function tableGenerator(JSONArr, TableOpt) {
         if (JSONArr[i][3] == "" && JSONArr[i + 1][5] == "") {   // Hide events titles with no recorded athletes
         }
         else if (JSONArr[i][3] == "" & JSONArr[i][1] == "M") {  // Highlight event titles - Boys
-            table += '<tr style="background-color: aliceblue;"><td colspan="6">'
+            table += '<tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="6">'
             table += JSONArr[i][4]
             table += '</td></tr>';
         }
         else if (JSONArr[i][3] == "") {                         // Highlight event titles - Girls
-            table += '<tr style="background-color: lavenderblush;"><td colspan="6">'
+            table += '<tr style="background-color: lavenderblush;"><td style="background-color: lavenderblush;" colspan="6">'
             table += JSONArr[i][4]
             table += '</td></tr>';
         }
@@ -184,27 +184,27 @@ function tableGeneratorScores(JSONArr) {
         else if ([i] == 4 || [i] == 14 || [i] == 24) {                                     
             table += `
                 <tr style="background-color: aliceblue;">
-                    <td>${JSONArr[i][1]}</td>
-                    <td>${JSONArr[i][0]}</td>
-                    <td>${JSONArr[i][2]}</td>  
+                    <td style="background-color: aliceblue;">${JSONArr[i][1]}</td>
+                    <td style="background-color: aliceblue;">${JSONArr[i][0]}</td>
+                    <td style="background-color: aliceblue;">${JSONArr[i][2]}</td>  
                 </tr>
                 `;
         }
         else if ([i] == 34 || [i] == 44 || [i] == 54 ) {                               
             table += `
                 <tr style="background-color: lavenderblush;">
-                    <td>${JSONArr[i][1]}</td>
-                    <td>${JSONArr[i][0]}</td>
-                    <td>${JSONArr[i][2]}</td>  
+                    <td style="background-color: lavenderblush;">${JSONArr[i][1]}</td>
+                    <td style="background-color: lavenderblush;">${JSONArr[i][0]}</td>
+                    <td style="background-color: lavenderblush;">${JSONArr[i][2]}</td>  
                 </tr>
                 `;
         }
         else if ([i] == 64 ) {                                
             table += `
                 <tr style="background-color: lemonchiffon;">
-                    <td  >${JSONArr[i][1]}</td>
-                    <td >${JSONArr[i][0]}</td>
-                    <td >${JSONArr[i][2]}</td>  
+                    <td style="background-color: lemonchiffon;">${JSONArr[i][1]}</td>
+                    <td style="background-color: lemonchiffon;">${JSONArr[i][0]}</td>
+                    <td style="background-color: lemonchiffon;">${JSONArr[i][2]}</td>  
                 </tr>
                 `;
         }
@@ -213,9 +213,9 @@ function tableGeneratorScores(JSONArr) {
         else {                                                  // Display recorded athletes
             table += `
                 <tr>
-                     <td >${JSONArr[i][1]}</td>
-                     <td >${JSONArr[i][0]}</td>
-                     <td >${JSONArr[i][2]}</td>    
+                     <td>${JSONArr[i][1]}</td>
+                     <td>${JSONArr[i][0]}</td>
+                     <td>${JSONArr[i][2]}</td>    
                 </tr>
                 `;
         }
@@ -228,8 +228,9 @@ function tableGeneratorScores(JSONArr) {
 function pageLoad() {
     if (numUpdating == "Updating") { }
     else {
-        num = 300; // in seconds
-        setTimeout(pageLoad, num * 1000);
+        num = PollingTime*60; // declared in seconds
+        if (pageLoadTimeoutId) {clearTimeout(pageLoadTimeoutId);}  
+        pageLoadTimeoutId = setTimeout(pageLoad, num * 1000);
         numUpdating = "Updating";
 
         const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
@@ -338,4 +339,18 @@ window.onscroll = function () {
 
 document.getElementById("btn-back-to-top").addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    var tabLinks = document.querySelectorAll('.navbar-collapse .nav > li > a, .navbar-collapse .nav-link');
+
+    tabLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
+            var navbarCollapse = document.querySelector('.navbar-collapse');
+            if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                var collapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
+                collapseInstance.hide();
+            }
+        });
+    });
 });
