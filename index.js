@@ -22,8 +22,11 @@ setInterval(function () {
     }
     else {
         num--;
+        let mins = Math.floor(num / 60);
+        let secs = num % 60;
+        let twoDigit = secs < 10 ? '0' + secs : secs.toString();
         document.getElementById('IntervalCounter')
-            .innerHTML = "Updating in " + num + "s";
+            .innerHTML = "Updating in " + mins + ":" + twoDigit;
     }
 }
     , 1000);
@@ -244,7 +247,7 @@ function pageLoad() {
                 return response.json();
             })
             .then(data => {
-                JSONArrdataMain = data;
+                JSONArrdataMain = data.text;
                 tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
                 numUpdating = "";
             })
@@ -263,7 +266,7 @@ function pageLoad() {
                 return response.json();
             })
             .then(data => {
-                JSONArrdataNS = data;
+                JSONArrdataNS = data.text;
                 tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
             })
             .catch(error => {
@@ -280,7 +283,7 @@ function pageLoad() {
                 return response.json();
             })
             .then(data => {
-                JSONArrdataQK = data;
+                JSONArrdataQK = data.text;
                 tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
             })
             .catch(error => {
@@ -326,7 +329,6 @@ function Refresh(divId) {
     }
 }
 
-
 // Scroll back to top button functionality
 window.onscroll = function () {
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -341,7 +343,8 @@ document.getElementById("btn-back-to-top").addEventListener("click", function ()
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+// collapse top menu
+/*document.addEventListener("DOMContentLoaded", function () {
     var tabLinks = document.querySelectorAll('.navbar-collapse .nav > li > a, .navbar-collapse .nav-link');
 
     tabLinks.forEach(function (link) {
@@ -353,4 +356,4 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-});
+});*/
