@@ -1,5 +1,4 @@
-const API_BASE_URL =
-    window.location.hostname === ""
+const API_BASE_URL = window.location.hostname === ""
         ? "https://localhost:7073" : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; 
 
 const API_ENDPOINTS = {
@@ -13,6 +12,9 @@ var PollingTime = 5; // in minutes
 var num = 0;
 var numUpdating = "";
 var pageLoadTimeoutId = null; 
+var TeamFilterMain = "";
+var TeamFilterNS = "";
+var TeamFilterQK = "";
 
 setInterval(function () { 
     if (numUpdating == "Updating") {
@@ -96,13 +98,11 @@ function tableGenerator(JSONArr, TableOpt) {
 
     for (let i = 0; i < JSONArr.length; i++) {
 
-        if (i > 0) {                                            // Create a new table if the age or sex changes
-            if (JSONArr[i][0] != JSONArr[i - 1][0] || JSONArr[i][1] != JSONArr[i - 1][1]) {
+        if (i > 0 && (JSONArr[i][0] != JSONArr[i - 1][0] || JSONArr[i][1] != JSONArr[i - 1][1])) {  // Create a new table if the age or sex changes
                 table += `</tbody></table><table class="table"><tbody>`;
-            };
         }
 
-        if (JSONArr[i][3] == "" && JSONArr[i + 1][5] == "") {   // Hide events titles with no recorded athletes
+        if (JSONArr[i][3] == "" && (i + 1 >= JSONArr.length || JSONArr[i + 1][5] == "")) {   // Hide events titles with no recorded athletes
         }
         else if (JSONArr[i][3] == "" & JSONArr[i][1] == "M") {  // Highlight event titles - Boys
             table += '<tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="6">'
@@ -123,7 +123,8 @@ function tableGenerator(JSONArr, TableOpt) {
                     <td style="width:8%">${JSONArr[i][4]}</td>
                     <td style="width:8%">${JSONArr[i][5]}</td>
                     <td style="width:8%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}</td>
+                    <td style="width:48%">${JSONArr[i][7]}
+                    <img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
                     <td style="width:20%">${JSONArr[i][8]}</td>
                     <td style="width:8%">${JSONArr[i][9]}</td>
                 </tr>
@@ -134,7 +135,8 @@ function tableGenerator(JSONArr, TableOpt) {
                 <tr>
                     <td style="width:12%">${JSONArr[i][5]}</td>
                     <td style="width:12%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}</td>
+                    <td style="width:48%">${JSONArr[i][7]}
+                    <img onclick="Pof10(this,'NS')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
                     <td style="width:28%">${JSONArr[i][8]}</td>
                 </tr>
                 `;
@@ -144,7 +146,8 @@ function tableGenerator(JSONArr, TableOpt) {
                 <tr>
                     <td style="width:12%">${JSONArr[i][5]}</td>
                     <td style="width:12%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}</td>
+                    <td style="width:48%">${JSONArr[i][7]}
+                    <img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
                     <td style="width:20%">${JSONArr[i][8]}</td>
                     <td style="width:8%">${JSONArr[i][9]}</td>
                 </tr>
@@ -249,6 +252,8 @@ function pageLoad() {
             .then(data => {
                 JSONArrdataMain = data.text;
                 tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
+                renderMainFilterMenu(JSONArrdataMain);
+                updateMainRowVisibility();  //Todo. Make sure newly added entries reflect the checkbox esp team checkboxes
                 numUpdating = "";
             })
             .catch(error => {
@@ -268,6 +273,8 @@ function pageLoad() {
             .then(data => {
                 JSONArrdataNS = data.text;
                 tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
+                renderU13U20NSFilterMenu(JSONArrdataNS);
+                updateU13U20NSRowVisibility();
             })
             .catch(error => {
                 console.error("Error fetching JSON:", error); // TODO fix this
@@ -285,6 +292,8 @@ function pageLoad() {
             .then(data => {
                 JSONArrdataQK = data.text;
                 tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
+                renderQKFilterMenu(JSONArrdataQK);
+                updateQKRowVisibility();
             })
             .catch(error => {
                 console.error("Error fetching JSON:", error); // TODO fix this
@@ -316,21 +325,23 @@ function Refresh(divId) {
         const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
         const EventTab1 = filterConditionEvent('Tab1');
         tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
+        updateMainRowVisibility();
     }
     else if (divId === 'Tab2') {
         const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
         const EventTab2 = filterConditionEvent('Tab2');
         tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
+        updateU13U20NSRowVisibility();
     }
     else if (divId === 'Tab3') {
         const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
         const EventTab3 = filterConditionEvent('Tab3');
         tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
+        updateQKRowVisibility();
     }
 }
 
-// Scroll back to top button functionality
-window.onscroll = function () {
+window.onscroll = function () {   // Scroll back to top button functionality
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
         document.getElementById("btn-back-to-top").style.display = "block";
     }
@@ -338,22 +349,164 @@ window.onscroll = function () {
         document.getElementById("btn-back-to-top").style.display = "none";
     }
 };
-
 document.getElementById("btn-back-to-top").addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// collapse top menu
-/*document.addEventListener("DOMContentLoaded", function () {
-    var tabLinks = document.querySelectorAll('.navbar-collapse .nav > li > a, .navbar-collapse .nav-link');
+function renderMainFilterMenu(JSONArr) {
+    const container = document.getElementById('item8-filter-menu');
+    if (!container) return;
 
-    tabLinks.forEach(function (link) {
-        link.addEventListener('click', function () {
-            var navbarCollapse = document.querySelector('.navbar-collapse');
-            if (navbarCollapse && navbarCollapse.classList.contains('show')) {
-                var collapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
-                collapseInstance.hide();
-            }
+    // Get distinct, non-empty values of item 8, only from rows where item 7 is not empty
+    const values = [
+        ...new Set(
+            JSONArr
+                .filter(row => row[7] && row[7].trim() !== "") // Exclude rows where item 7 is ""
+                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
+                .filter(v => v)
+        )
+    ].sort();
+    if (TeamFilterMain != values.length) {
+        TeamFilterMain = values.length;
+        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+        values.forEach(val => {
+            html += `<div class="form-check form-check-inline">
+                <input class="form-check-input item8-filter" type="checkbox" value="${val}" id="${val}" name="${val}" checked>
+                <label class="form-check-label" for="${val}">${val}</label>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Individual toggles
+    container.querySelectorAll('.item8-filter').forEach(cb => {
+        cb.addEventListener('change', function () {
+            updateMainRowVisibility();
         });
     });
-});*/
+}
+function updateMainRowVisibility() {
+    const checked = Array.from(document.querySelectorAll('.item8-filter:checked')).map(cb => cb.value);
+    document.querySelectorAll('#tableResultsMain table tr').forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length === 6) {
+            const val = tds[4].textContent.trim();
+            tr.style.display = checked.includes(val) ? '' : 'none';
+        }
+    });
+}
+
+function renderU13U20NSFilterMenu(JSONArr) {
+    const container = document.getElementById('u13u20ns-filter-menu');
+    if (!container) return;
+
+    const values = [
+        ...new Set(
+            JSONArr
+                .filter(row => row[7] && row[7].trim() !== "") // Exclude rows where item 7 is ""
+                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
+                .filter(v => v)
+        )
+    ].sort();
+    if (TeamFilterNS != values.length) {
+        TeamFilterNS = values.length;
+        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+        values.forEach(val => {
+            html += `<div class="form-check form-check-inline">
+                <input class="form-check-input u13u20ns-filter" type="checkbox" value="${val}" id="ns-${val}" name="ns-${val}" checked>
+                <label class="form-check-label" for="ns-${val}">${val}</label>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Individual toggles
+    container.querySelectorAll('.u13u20ns-filter').forEach(cb => {
+        cb.addEventListener('change', function () {
+            updateU13U20NSRowVisibility();
+        });
+    });
+}
+function updateU13U20NSRowVisibility() {
+    const checked = Array.from(document.querySelectorAll('.u13u20ns-filter:checked')).map(cb => cb.value);
+
+    // Find all rows in the NS table
+    document.querySelectorAll('#tableResultsNS table tr').forEach(tr => {
+      
+        const tds = tr.querySelectorAll('td');
+        if (tds.length === 4) {
+            const val = tds[3].textContent.trim();
+            tr.style.display = checked.includes(val) ? '' : 'none';
+        }
+    });
+}
+
+function renderQKFilterMenu(JSONArr) {
+    const container = document.getElementById('qk-filter-menu');
+    if (!container) return;
+
+    const values = [
+        ...new Set(
+            JSONArr
+                .filter(row => row[7] && row[7].trim() !== "")
+                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
+                .filter(v => v)
+        )
+    ].sort();
+
+    if (TeamFilterQK != values.length) {  
+        TeamFilterQK = values.length;
+        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+        values.forEach(val => {
+            html += `<div class="form-check form-check-inline">
+                <input class="form-check-input qk-filter" type="checkbox" value="${val}" id="qk-${val}" name="qk-${val}" checked>
+                <label class="form-check-label" for="qk-${val}">${val}</label>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Individual toggles
+    container.querySelectorAll('.qk-filter').forEach(cb => {
+        cb.addEventListener('change', function () {
+            updateQKRowVisibility();
+        });
+    });
+}
+function updateQKRowVisibility() {
+    const checked = Array.from(document.querySelectorAll('.qk-filter:checked')).map(cb => cb.value);
+
+    // Find all rows in the QK table
+    document.querySelectorAll('#tableResultsQK table tr').forEach(tr => {
+       
+        const tds = tr.querySelectorAll('td');
+        if (tds.length === 5) {
+            const val = tds[3].textContent.trim();
+            tr.style.display = checked.includes(val) ? '' : 'none';
+        }
+    });
+}
+
+function Pof10(id, opt) {
+    const tr = id.closest('tr');
+    if (!tr) return;
+    const tds = tr.getElementsByTagName('td');
+
+    if (tds.length >= 4 && opt=="Main") {
+        var fullname = tds[3].textContent.trim();
+        var club = tds[4].textContent.trim();
+    }
+    if (tds.length >= 3 && (opt == "NS" || opt == "QK")) {
+        var fullname = tds[2].textContent.trim();
+        var club = tds[3].textContent.trim();
+    }
+  
+    var firstname = fullname.substring(0, fullname.indexOf(' '));
+    var surname = fullname.substring(fullname.indexOf(' ') + 1); 
+    window.open(
+        `https://www.thepowerof10.info/athletes/athleteslookup.aspx?surname=${encodeURIComponent(surname)}&firstname=${encodeURIComponent(firstname)}&club=${encodeURIComponent(club)}`, "_blank", "noopener");
+       // todo - don't show for relay teams. Also I don't know how to link straight through to the athlete's page
+}
+
+
+
