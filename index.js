@@ -483,8 +483,8 @@ function updateMainRowVisibility() {
     const checked = Array.from(document.querySelectorAll('.item8-filter:checked')).map(cb => cb.value);
     document.querySelectorAll('#tableResultsMain table tr').forEach(tr => {
         const tds = tr.querySelectorAll('td');
-        if (tds.length === 6) {
-            const val = tds[4].textContent.trim();
+        if (tds.length === 7) {
+            const val = tds[5].textContent.trim();
             tr.style.display = checked.includes(val) ? '' : 'none';
         }
     });
