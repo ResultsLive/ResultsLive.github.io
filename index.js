@@ -5,16 +5,18 @@ const API_ENDPOINTS = {
     main:   `${API_BASE_URL}/JSONMain`,
     ns:     `${API_BASE_URL}/JSONNS`,
     qk:     `${API_BASE_URL}/JSONQK`,
-    scores: `${API_BASE_URL}/JSONScores`
+    scores: `${API_BASE_URL}/JSONScores`,
+    declarations: `${API_BASE_URL}/JSONDeclarations`
 };
 
-var PollingTime = 5; // in minutes
+var PollingTime = 1; // in minutes
 var num = 0;
 var numUpdating = "";
 var pageLoadTimeoutId = null; 
 var TeamFilterMain = "";
 var TeamFilterNS = "";
 var TeamFilterQK = "";
+var TeamFilterDeclarations = "";
 
 setInterval(function () { 
     if (numUpdating == "Updating") {
@@ -105,13 +107,23 @@ function tableGenerator(JSONArr, TableOpt) {
         if (JSONArr[i][3] == "" && (i + 1 >= JSONArr.length || JSONArr[i + 1][5] == "")) {   // Hide events titles with no recorded athletes
         }
         else if (JSONArr[i][3] == "" & JSONArr[i][1] == "M") {  // Highlight event titles - Boys
-            table += '<tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="6">'
+            table += '<tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="4">'
             table += JSONArr[i][4]
+            table += '</td>'
+            table += '<td style="background-color: aliceblue; text-align:right" colspan="3"; >'
+            table += JSONArr[i][8]
+            table += ' '
+            table += JSONArr[i][9]
             table += '</td></tr>';
         }
         else if (JSONArr[i][3] == "") {                         // Highlight event titles - Girls
-            table += '<tr style="background-color: lavenderblush;"><td style="background-color: lavenderblush;" colspan="6">'
+            table += '<tr style="background-color: lavenderblush;"><td style="background-color: lavenderblush;" colspan="4">'
             table += JSONArr[i][4]
+            table += '</td>'
+            table += '<td style="background-color: lavenderblush; text-align:right" colspan="3"; >'
+            table += JSONArr[i][8]
+            table += ' '
+            table += JSONArr[i][9]
             table += '</td></tr>';
         }
         else if (JSONArr[i][5] == "") {                         // Hide rows without athletes
@@ -123,8 +135,8 @@ function tableGenerator(JSONArr, TableOpt) {
                     <td style="width:8%">${JSONArr[i][4]}</td>
                     <td style="width:8%">${JSONArr[i][5]}</td>
                     <td style="width:8%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}
-                    <img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
+                    <td style="width:43%">${JSONArr[i][7]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px"></td>
                     <td style="width:20%">${JSONArr[i][8]}</td>
                     <td style="width:8%">${JSONArr[i][9]}</td>
                 </tr>
@@ -135,9 +147,10 @@ function tableGenerator(JSONArr, TableOpt) {
                 <tr>
                     <td style="width:12%">${JSONArr[i][5]}</td>
                     <td style="width:12%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}
-                    <img onclick="Pof10(this,'NS')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
-                    <td style="width:28%">${JSONArr[i][8]}</td>
+                    <td style="width:43%">${JSONArr[i][7]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'NS')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:20%">${JSONArr[i][8]}</td>
+                    <td style="width:8%"></td><!-- ToDO: select PB awards level for NS -->
                 </tr>
                 `;
             }
@@ -146,8 +159,8 @@ function tableGenerator(JSONArr, TableOpt) {
                 <tr>
                     <td style="width:12%">${JSONArr[i][5]}</td>
                     <td style="width:12%">${JSONArr[i][6]}</td>
-                    <td style="width:48%">${JSONArr[i][7]}
-                    <img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px" style="float:right; padding-top:2px"></td>
+                    <td style="width:43%">${JSONArr[i][7]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td>
                     <td style="width:20%">${JSONArr[i][8]}</td>
                     <td style="width:8%">${JSONArr[i][9]}</td>
                 </tr>
@@ -167,6 +180,61 @@ function tableGenerator(JSONArr, TableOpt) {
     else if (TableOpt == "QK") {
         document.getElementById('tableResultsQK').innerHTML = table;
     }
+}
+function tableGeneratorDeclarations(JSONArr, TableOpt) {
+
+    let table = '';
+
+    table += '<table class="table"><tbody>';
+
+    for (let i = 0; i < JSONArr.length; i++) {
+
+        if (i > 0 && (JSONArr[i][0] != JSONArr[i - 1][0] || JSONArr[i][1] != JSONArr[i - 1][1])) {  // Create a new table if the age or sex changes
+            table += `</tbody></table><table class="table"><tbody>`;
+        }
+
+        if (JSONArr[i][3] == "String" && (i + 1 >= JSONArr.length || JSONArr[i + 1][3] == "String")) {   // Hide events titles with no recorded athletes
+        }
+        else if (JSONArr[i][3] == "String" & JSONArr[i][1] == "M") {  // Highlight event titles - Boys
+            table += `
+                <tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="6">
+                ${JSONArr[i][8]} ${JSONArr[i][7]}
+                </td></tr>
+                `;
+        }
+        else if (JSONArr[i][3] == "String") {                         // Highlight event titles - Girls
+            table += `
+                <tr style="background-color: lavenderblush;"><td style="background-color: lavenderblush;" colspan="6">
+                ${JSONArr[i][8]} ${JSONArr[i][7]}
+                </td></tr>
+                `;
+        }
+        else if (JSONArr[i][4] != "") {                         // Hide rows without athletes
+        }
+        else {
+            if (TableOpt == "Declarations") {                           // Display athletes
+                table += `
+                <tr>
+                    <td style="width:12%">${JSONArr[i][3]}</td>
+                    <td style="width:12%">${JSONArr[i][5]}</td>
+                    <td style="width:43%">${JSONArr[i][7]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'Declarations')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:20%">${JSONArr[i][8]}</td> 
+                    <td style="width:8%">${JSONArr[i][9]}</td>
+                </tr>
+                `;
+            }
+           
+        }
+    }
+
+    table += '</tbody></table>';
+
+    if (TableOpt == "Declarations") {
+        document.getElementById('tableResultsDeclarations').innerHTML = table;
+    }
+  
+
 }
 function tableGeneratorScores(JSONArr) {
     let table = '';
@@ -313,6 +381,26 @@ function pageLoad() {
             .catch(error => {
                 console.error("Error fetching JSON:", error); // TODO fix this
             });
+
+        const {filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
+        const EventTab5 = filterConditionEvent('Tab5');
+        fetch(API_ENDPOINTS.declarations)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
+                }
+                return response.json();
+            })
+            .then(data => {
+                JSONArrdataDeclarations = data.text;
+                tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
+                renderDeclarationFilterMenu(JSONArrdataDeclarations);
+                updateDeclarationsRowVisibility();  //Todo. Make sure newly added entries reflect the checkbox esp team checkboxes               
+            })
+            .catch(error => {
+                console.error("Error fetching JSON:", error); // TODO fix this
+            });
+
     }
 }
 function Refresh(divId) {
@@ -338,6 +426,12 @@ function Refresh(divId) {
         const EventTab3 = filterConditionEvent('Tab3');
         tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
         updateQKRowVisibility();
+    }
+    else if (divId === 'Tab5') {
+            const { filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
+            const EventTab5 = filterConditionEvent('Tab5');
+            tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
+            updateDeclarationsRowVisibility();
     }
 }
 
@@ -434,8 +528,8 @@ function updateU13U20NSRowVisibility() {
     document.querySelectorAll('#tableResultsNS table tr').forEach(tr => {
       
         const tds = tr.querySelectorAll('td');
-        if (tds.length === 4) {
-            const val = tds[3].textContent.trim();
+        if (tds.length === 6) {
+            const val = tds[4].textContent.trim();
             tr.style.display = checked.includes(val) ? '' : 'none';
         }
     });
@@ -480,12 +574,59 @@ function updateQKRowVisibility() {
     document.querySelectorAll('#tableResultsQK table tr').forEach(tr => {
        
         const tds = tr.querySelectorAll('td');
-        if (tds.length === 5) {
-            const val = tds[3].textContent.trim();
+        if (tds.length === 6) {
+            const val = tds[4].textContent.trim();
             tr.style.display = checked.includes(val) ? '' : 'none';
         }
     });
 }
+
+    function renderDeclarationFilterMenu(JSONArr) {
+        const container = document.getElementById('declarations-filter-menu');
+        if (!container) return;
+
+        const values = [
+            ...new Set(
+                JSONArr
+                    .filter(row => row[3] && row[3].trim() != "String")
+                    .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
+                    .filter(v => v)
+            )
+        ].sort();
+
+        if (TeamFilterDeclarations != values.length) {
+            TeamFilterDeclarations = values.length;
+            let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+            values.forEach(val => {
+                html += `<div class="form-check form-check-inline">
+                <input class="form-check-input declarations-filter" type="checkbox" value="${val}" id="declarations-${val}" name="declarations-${val}" checked>
+                <label class="form-check-label" for="declarations-${val}">${val}</label>
+            </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Individual toggles
+        container.querySelectorAll('.declarations-filter').forEach(cb => {
+            cb.addEventListener('change', function () {
+                updateDeclarationsRowVisibility();
+            });
+        });
+    }
+    function updateDeclarationsRowVisibility() {
+        const checked = Array.from(document.querySelectorAll('.declarations-filter:checked')).map(cb => cb.value);
+
+        // Find all rows in the QK table
+        document.querySelectorAll('#tableResultsDeclarations table tr').forEach(tr => {
+
+            const tds = tr.querySelectorAll('td');
+           
+            if (tds.length === 6) {
+                const val = tds[4].textContent.trim();
+                tr.style.display = checked.includes(val) ? '' : 'none';
+            }
+        });
+    }
 
 function Pof10(id, opt) {
     const tr = id.closest('tr');
@@ -494,18 +635,19 @@ function Pof10(id, opt) {
 
     if (tds.length >= 4 && opt=="Main") {
         var fullname = tds[3].textContent.trim();
-        var club = tds[4].textContent.trim();
+        var club = tds[5].textContent.trim();
     }
-    if (tds.length >= 3 && (opt == "NS" || opt == "QK")) {
+
+    if (tds.length >= 3 && (opt == "NS" || opt == "QK" || opt == "Declarations")) {
         var fullname = tds[2].textContent.trim();
-        var club = tds[3].textContent.trim();
+        var club = tds[4].textContent.trim();
     }
   
     var firstname = fullname.substring(0, fullname.indexOf(' '));
     var surname = fullname.substring(fullname.indexOf(' ') + 1); 
     window.open(
         `https://www.thepowerof10.info/athletes/athleteslookup.aspx?surname=${encodeURIComponent(surname)}&firstname=${encodeURIComponent(firstname)}&club=${encodeURIComponent(club)}`, "_blank", "noopener");
-       // todo - don't show for relay teams. Also I don't know how to link straight through to the athlete's page
+    // todo - don't show for relay teams. Also I don't know how to link straight through to the athlete's page, can;t right click in the browser and copy link address
 }
 
 
