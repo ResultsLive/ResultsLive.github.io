@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.hostname === ""
+﻿const API_BASE_URL = window.location.hostname === ""
         ? "https://localhost:7073" : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; 
 
 const params = new URLSearchParams(window.location.search);
@@ -9,7 +9,8 @@ const API_ENDPOINTS = {
     ns:     `${API_BASE_URL}/JSONNS`,
     qk: `${API_BASE_URL}/JSONQK/${QK}`,
     scores: `${API_BASE_URL}/JSONScores`,
-    declarations: `${API_BASE_URL}/JSONDeclarations`
+    declarations: `${API_BASE_URL}/JSONDeclarations`,
+    list: `${API_BASE_URL}/listappfolder`
 };
 
 var PollingTime = 1; // in minutes
@@ -404,6 +405,7 @@ function pageLoad() {
                 console.error("Error fetching JSON:", error); // TODO fix this
             });
 
+        getFiles();
     }
 }
 function Refresh(divId) {
@@ -653,5 +655,58 @@ function Pof10(id, opt) {
     // todo - don't show for relay teams. Also I don't know how to link straight through to the athlete's page, can;t right click in the browser and copy link address
 }
 
+
+  function getFiles() {
+    fetch(API_ENDPOINTS.list)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const name = findNameById(data, Main);
+            const el = document.getElementById("Title_Text");
+            el.classList.remove("show");     
+            el.textContent = formatFilename(name);
+                requestAnimationFrame(() => {
+                    el.classList.add("show");      // trigger fade-in
+                });
+        })
+        .catch(error => {
+            console.error("Error fetching JSON:", error); // TODO fix this
+        });
+    }
+    function findNameById(node, targetId) {
+        if (node.id === targetId) {
+            return node.name;
+        }
+        if (Array.isArray(node.children)) {
+            for (const child of node.children) {
+                const result = findNameById(child, targetId);
+                if (result) return result;
+            }
+         }
+         return null;
+}
+    function formatFilename(filename) {
+        const dateMatch = filename.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (!dateMatch) return null;
+
+        const [_, year, month, day] = dateMatch;
+
+        // Convert to readable date
+        const date = new Date(`${year}-${month}-${day}`);
+        const formattedDate = date.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+        // Extract prefix before first underscore
+        const prefix = filename.split("_")[0];
+
+        return `${prefix} - ${formattedDate}`;
+    }
 
 
