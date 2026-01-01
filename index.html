@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="Icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="Icons/favicon-16x16.png">
     <link rel="manifest" href="Icons/site.webmanifest">
+   
     <style>
         .nav > li > a {
             padding-top: 5px;
@@ -20,7 +21,6 @@
             transition: none;
         }
     </style>
-
 </head>
 
 <body style="padding-top:10px; min-height:1000px">
@@ -36,10 +36,10 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav nav-pills me-auto nav-fill" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab1" role="tab" aria-selected="false">U13-U17 Scoring</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#Tab1" role="tab" aria-selected="false">U14-U17 Scoring</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab2" role="tab" aria-selected="false">U13-U20 Non Scoring</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#Tab2" role="tab" aria-selected="false">U14-U20 Non Scoring</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#Tab3" role="tab" aria-selected="false">QuadKids</a>
@@ -48,7 +48,7 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#Tab4" role="tab" aria-selected="false">Team Scores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U13-U20 Declarations</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U14-U20 Declarations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#Tab0" role="tab" aria-selected="true">Help</a>
@@ -67,11 +67,11 @@
         <div id="Tab0" class="tab-pane show active" role="tabpanel">
             <div style="margin-top:20px; padding-left:10px" id="tableResults0">
                 This is a <b>trial</b> live results page for the Oxfordshire Track & Field League. There is no need to refresh the page as it will automatically check for new results every minute.
-                <br /><br />173 QuadKids & 297 U13-U20 athletes have declared for the match. 
+                <br /><br />173 QuadKids & 297 U14-U20 athletes have declared for the match. 
                 <br /><br />The match timetable can be found <a href="https://otfl.org.uk/wp-content/uploads/2025/04/2025-otfl-main-timetable-2.pdf" target="_blank">here</a>
-                <br /><br />Click through the top menu links (the top menu will be displayed as 'Menu' on a mobile phone) to select the set of results you want ie U13-17 Scoring, U13-U20 Non Scoring or QuadKids. Each set of results can be filtered by age, sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
+                <br /><br />Click through the top menu links (the top menu will be displayed as 'Menu' on a mobile phone) to select the set of results you want ie U14-17 Scoring, U14-U20 Non Scoring or QuadKids. Each set of results can be filtered by age, sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
                 <br /><br />Clicking on the Power of 10 icon <img src="Pof10a.jpg" width="26px"> next to an athlete's name will take you through to that athlete's Power of 10 listing.
-                <br /><br />The 'U13-U20 Declarations' link lists all the athletes that have declared for a particular event.
+                <br /><br />The 'U14-U20 Declarations' link lists all the athletes that have declared for a particular event.
                <!-- <br /><br />Wind speed doesn't currently show on the result pages but if it is being recorded it will be on the results sent to the Power of 10.-->
                 <br /><br />Any queries on the results please talk to your team manager and they can then query with the scorers.
                 <br /><br />Any bugs/suggestions/other queries please email mylesfleming07@gmail.com. 
@@ -89,8 +89,8 @@
                         <div class="col-auto">
                             <label>Age:</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
-                                <label class="form-check-label" for="U13">U13</label>
+                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                <label class="form-check-label" for="U14">U14</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
@@ -148,8 +148,8 @@
                         <div class="col-auto">
                             <label>Age:</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
-                                <label class="form-check-label" for="U13">U13</label>
+                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                <label class="form-check-label" for="U14">U14</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
@@ -186,7 +186,7 @@
                                 <label class="form-check-label" for="Field">Field</label>
                             </div>
                         </div>
-                        <div class="col-auto" id="u13u20ns-filter-menu"></div>
+                        <div class="col-auto" id="U14u20ns-filter-menu"></div>
                         <div class="col-auto">
                             <label>Show All:</label>
                             <div class="form-check form-check-inline">
@@ -269,8 +269,8 @@
                         <div class="col-auto">
                             <label>Age:</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
-                                <label class="form-check-label" for="U13">U13</label>
+                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                <label class="form-check-label" for="U14">U14</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>

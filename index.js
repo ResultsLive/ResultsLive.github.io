@@ -1,10 +1,13 @@
 const API_BASE_URL = window.location.hostname === ""
         ? "https://localhost:7073" : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net"; 
 
+const params = new URLSearchParams(window.location.search);
+const Main = params.get('Main');
+const QK = params.get('QK');
 const API_ENDPOINTS = {
-    main:   `${API_BASE_URL}/JSONMain`,
+    main: `${API_BASE_URL}/JSONMain/${Main}`,
     ns:     `${API_BASE_URL}/JSONNS`,
-    qk:     `${API_BASE_URL}/JSONQK`,
+    qk: `${API_BASE_URL}/JSONQK/${QK}`,
     scores: `${API_BASE_URL}/JSONScores`,
     declarations: `${API_BASE_URL}/JSONDeclarations`
 };
@@ -60,7 +63,7 @@ function filterConditionAgeSex(divId) {
     let allowedCategoriesAge = [];
     if (container.querySelector('#U9')?.checked) allowedCategoriesAge.push("U9");
     if (container.querySelector('#U11')?.checked) allowedCategoriesAge.push("U11");
-    if (container.querySelector('#U13')?.checked) allowedCategoriesAge.push("U13");
+    if (container.querySelector('#U14')?.checked) allowedCategoriesAge.push("U14");
     if (container.querySelector('#U15')?.checked) allowedCategoriesAge.push("U15");
     if (container.querySelector('#U17')?.checked) allowedCategoriesAge.push("U17");
     if (container.querySelector('#U20')?.checked) allowedCategoriesAge.push("U20");
@@ -341,8 +344,8 @@ function pageLoad() {
             .then(data => {
                 JSONArrdataNS = data.text;
                 tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-                renderU13U20NSFilterMenu(JSONArrdataNS);
-                updateU13U20NSRowVisibility();
+                renderU14U20NSFilterMenu(JSONArrdataNS);
+                updateU14U20NSRowVisibility();
             })
             .catch(error => {
                 console.error("Error fetching JSON:", error); // TODO fix this
@@ -419,7 +422,7 @@ function Refresh(divId) {
         const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
         const EventTab2 = filterConditionEvent('Tab2');
         tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-        updateU13U20NSRowVisibility();
+        updateU14U20NSRowVisibility();
     }
     else if (divId === 'Tab3') {
         const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
@@ -490,8 +493,8 @@ function updateMainRowVisibility() {
     });
 }
 
-function renderU13U20NSFilterMenu(JSONArr) {
-    const container = document.getElementById('u13u20ns-filter-menu');
+function renderU14U20NSFilterMenu(JSONArr) {
+    const container = document.getElementById('U14u20ns-filter-menu');
     if (!container) return;
 
     const values = [
@@ -507,7 +510,7 @@ function renderU13U20NSFilterMenu(JSONArr) {
         let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
         values.forEach(val => {
             html += `<div class="form-check form-check-inline">
-                <input class="form-check-input u13u20ns-filter" type="checkbox" value="${val}" id="ns-${val}" name="ns-${val}" checked>
+                <input class="form-check-input U14u20ns-filter" type="checkbox" value="${val}" id="ns-${val}" name="ns-${val}" checked>
                 <label class="form-check-label" for="ns-${val}">${val}</label>
             </div>`;
         });
@@ -515,14 +518,14 @@ function renderU13U20NSFilterMenu(JSONArr) {
     }
 
     // Individual toggles
-    container.querySelectorAll('.u13u20ns-filter').forEach(cb => {
+    container.querySelectorAll('.U14u20ns-filter').forEach(cb => {
         cb.addEventListener('change', function () {
-            updateU13U20NSRowVisibility();
+            updateU14U20NSRowVisibility();
         });
     });
 }
-function updateU13U20NSRowVisibility() {
-    const checked = Array.from(document.querySelectorAll('.u13u20ns-filter:checked')).map(cb => cb.value);
+function updateU14U20NSRowVisibility() {
+    const checked = Array.from(document.querySelectorAll('.U14u20ns-filter:checked')).map(cb => cb.value);
 
     // Find all rows in the NS table
     document.querySelectorAll('#tableResultsNS table tr').forEach(tr => {
