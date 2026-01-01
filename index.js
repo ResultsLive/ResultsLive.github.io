@@ -311,6 +311,8 @@ function pageLoad() {
         pageLoadTimeoutId = setTimeout(pageLoad, num * 1000);
         numUpdating = "Updating";
 
+        getFiles();
+
         const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
         const EventTab1 = filterConditionEvent('Tab1');
         fetch(API_ENDPOINTS.main)
@@ -322,6 +324,13 @@ function pageLoad() {
                 return response.json();
             })
             .then(data => {
+                const el = document.getElementById("MessageID");
+                el.classList.remove("show");
+                el.textContent = data.message;
+                requestAnimationFrame(() => {
+                    el.classList.add("show");      // trigger fade-in
+                });
+
                 JSONArrdataMain = data.text;
                 tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
                 renderMainFilterMenu(JSONArrdataMain);
@@ -404,8 +413,6 @@ function pageLoad() {
             .catch(error => {
                 console.error("Error fetching JSON:", error); // TODO fix this
             });
-
-        getFiles();
     }
 }
 function Refresh(divId) {
