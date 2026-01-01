@@ -1,333 +1,304 @@
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="bootstrap.min.css" rel="stylesheet">
-    <title>Live Athletics Results</title>
+    <title>Track & Field Fixtures</title>
     <link rel="icon" href="favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="Icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="Icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="Icons/favicon-16x16.png">
     <link rel="manifest" href="Icons/site.webmanifest">
-   
+
     <style>
-        .nav > li > a {
-            padding-top: 5px;
-            padding-bottom: 5px;
+        /* Page background */
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            font-family: "Segoe UI", Roboto, sans-serif;
         }
 
-        .collapsing, collapse {
-            transition: none;
+        /* Card container */
+        .accordion-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .accordion-collapse {
+            transition: height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .accordion-button:hover {
+            background-color: #f1f3f5;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+        }
+
+        .accordion-item {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            border: 1px solid #dee2e6 !important;
+        }
+
+        /* LIVE badge */
+        .live-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.35rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+            box-shadow: 0 0 6px rgba(220, 53, 69, 0.5);
+        }
+
+        /* Fade out past matches */
+        .past-match {
+            opacity: 0.45;
+            filter: grayscale(60%);
+        }
+
+        .accordion-button .live-badge {
+            line-height: 1.5;
         }
     </style>
 </head>
 
-<body style="padding-top:10px; min-height:1000px">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding:0px;">
-            <!--fixed-top-->
-            <div class="container">
-                <a class="navbar-brand" href="#">OTFL - 7 September 2025</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
-                        aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span>Menu</span>
-                </button>
-                <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav nav-pills me-auto nav-fill" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab1" role="tab" aria-selected="false">U14-U17 Scoring</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab2" role="tab" aria-selected="false">U14-U20 Non Scoring</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab3" role="tab" aria-selected="false">QuadKids</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab4" role="tab" aria-selected="false">Team Scores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U14-U20 Declarations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#Tab0" role="tab" aria-selected="true">Help</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item" onclick="pageLoad()">
-                            <a class="nav-link" id="IntervalCounter" href="#">Updating.....</a>
-                        </li>
-                    </ul>
+<body>
+
+    <div class="accordion-container">
+
+        <h2 class="mb-4 text-center fw-bold">Track & Field Results</h2>
+
+        <div class="accordion" id="accordionExample">
+
+            <!-- Wessex League -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingWessex25">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseWessex25"
+                            aria-expanded="false"
+                            aria-controls="collapseWessex25">
+                        Wessex Track and Field League — 2025
+                    </button>
+
+                </h2>
+                <div id="collapseWessex25"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingWessex25">
+                    <div class="accordion-body">
+                        <ul class="mb-0" id="wessex-results-list25"></ul>
+                    </div>
                 </div>
             </div>
-        </nav>
-       
-    <div class="tab-content">
-        <div id="Tab0" class="tab-pane show active" role="tabpanel">
-            <div style="margin-top:20px; padding-left:10px" id="tableResults0">
-                This is a <b>trial</b> live results page for the Oxfordshire Track & Field League. There is no need to refresh the page as it will automatically check for new results every minute.
-                <br /><br />173 QuadKids & 297 U14-U20 athletes have declared for the match. 
-                <br /><br />The match timetable can be found <a href="https://otfl.org.uk/wp-content/uploads/2025/04/2025-otfl-main-timetable-2.pdf" target="_blank">here</a>
-                <br /><br />Click through the top menu links (the top menu will be displayed as 'Menu' on a mobile phone) to select the set of results you want ie U14-17 Scoring, U14-U20 Non Scoring or QuadKids. Each set of results can be filtered by age, sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
-                <br /><br />Clicking on the Power of 10 icon <img src="Pof10a.jpg" width="26px"> next to an athlete's name will take you through to that athlete's Power of 10 listing.
-                <br /><br />The 'U14-U20 Declarations' link lists all the athletes that have declared for a particular event.
-               <!-- <br /><br />Wind speed doesn't currently show on the result pages but if it is being recorded it will be on the results sent to the Power of 10.-->
-                <br /><br />Any queries on the results please talk to your team manager and they can then query with the scorers.
-                <br /><br />Any bugs/suggestions/other queries please email mylesfleming07@gmail.com. 
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingWessex26">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseWessex26"
+                            aria-expanded="false"
+                            aria-controls="collapseWessex26">
+                        Wessex Track and Field League — 2026
+                    </button>
+
+                </h2>
+                <div id="collapseWessex26"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingWessex26">
+                    <div class="accordion-body">
+                        <ul class="mb-0" id="wessex-results-list26"></ul>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div id="Tab1" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab1')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar1"
-                            aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
+
+            <!-- Oxfordshire League -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOxon25">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOxon25"
+                            aria-expanded="false"
+                            aria-controls="collapseOxon25">
+                        Oxfordshire Track and Field League — 2025
                     </button>
-                    <div id="navbar1" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="item8-filter-menu"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab1')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
+                </h2>
+                <div id="collapseOxon25"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingOxon25">
+                    <div class="accordion-body">
+                        <ul class="mb-0" id="oxon-results-list25"></ul>
                     </div>
                 </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsMain">Initialising...</div>
-        </div>
-        <div id="Tab2" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab2')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar2"
-                            aria-controls="navbar2" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOxon26">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOxon26"
+                            aria-expanded="false"
+                            aria-controls="collapseOxon26">
+                        Oxfordshire Track and Field League — 2026
                     </button>
-                    <div id="navbar2" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
-                                <label class="form-check-label" for="U20">U20</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="U14u20ns-filter-menu"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab2')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
+                </h2>
+                <div id="collapseOxon26"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingOxon26">
+                    <div class="accordion-body">
+                        <ul class="mb-0" id="oxon-results-list26"></ul>
                     </div>
                 </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsNS">Initialising...</div>
-        </div>
-        <div id="Tab3" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab3')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar3"
-                            aria-controls="navbar3" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar3" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U9" name="U9" checked>
-                                <label class="form-check-label" for="U9">U9</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U11" name="U11" checked>
-                                <label class="form-check-label" for="U11">U11</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="qk-filter-menu"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab3')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsQK">Initialising...</div>
-        </div>
-        <div id="Tab4" class="tab-pane" role="tabpanel">
-            <div style="margin-top:10px;" id="tableScores">Initialising...</div>
-        </div>
-        <div id="Tab5" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab5')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar5"
-                            aria-controls="navbar5" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar5" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
-                                <label class="form-check-label" for="U20">U20</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="declarations-filter-menu"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab5')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsDeclarations">Initialising...</div>
+            </div>
+
         </div>
     </div>
-    </div>
-    <button type="button" class="btn btn-danger" id="btn-back-to-top"
-            style="position: fixed; bottom: 20px; right: 20px; display: none;">
-        Top
-    </button>
+
     <script src="bootstrap.bundle.min.js"></script>
-    <script src="index.js"></script>
-    <script type="text/javascript">window.onload = pageLoad();</script>
+    <script>
+        const API_BASE_URL = window.location.hostname === ""
+            ? "https://localhost:7073" : "https://athleticsresultsapi-drardae4htehawen.ukwest-01.azurewebsites.net";
+
+        const API_ENDPOINTS = {list: `${API_BASE_URL}/listappfolder`};
+
+        const collapseIds = ["collapseOxon25", "collapseOxon26", "collapseWessex25", "collapseWessex26"];
+
+        const collapses = collapseIds.map(id => new bootstrap.Collapse(document.getElementById(id), { toggle: false }));
+
+        function getFiles() {
+
+            fetch(API_ENDPOINTS.list)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    function populateLeagueList(leagueName, yearName, listId) {
+                        const league = data.children.find(child => child.name === leagueName);
+                        if (!league) return;
+                        const year = league.children.find(child => child.name === yearName);
+                        if (!year) return;
+                        const items = year.children.map(item => ({ name: item.name, id: item.id }));
+                        const groupedResults = groupFiles(items);
+                        const list = document.getElementById(listId);
+                        if (!list) return;
+                        list.innerHTML = "";
+                        groupedResults.forEach(result => {
+                            const li = document.createElement("li");
+                            li.setAttribute("data-date", result.date);
+                            const a = document.createElement("a");
+                            a.href = `match.html?Main=${result.MainID}&QK=${result.QKID}`;
+                            a.textContent = result.name;
+                            li.appendChild(a);
+                            list.appendChild(li);
+                        });
+                    }
+                    populateLeagueList("OTFL", "2025", "oxon-results-list25");
+                    populateLeagueList("OTFL", "2026", "oxon-results-list26");
+                    populateLeagueList("Wessex", "2025", "wessex-results-list25");
+                    populateLeagueList("Wessex", "2026", "wessex-results-list26");
+
+                    Live();
+                    collapses.forEach(c => c.show())
+                })
+                .catch(error => {
+                    console.error("Error fetching JSON:", error); // TODO fix this
+                });
+        }
+
+        function groupFiles(items) {
+            // Map: key = matchNumber + date, value = { name, date, MainID, QKID }
+            const groups = {};
+            items.forEach(item => {
+                const name = item.name;
+                const id = item.id;
+                const match = name.match(/Match_(\d+)/);
+                const dateMatch = name.match(/\d{4}-\d{2}-\d{2}/);
+                if (!match || !dateMatch) return;
+                const matchNumber = match[1];
+                const date = dateMatch[0];
+                const d = new Date(date);
+                const shortDate = d.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long"
+                });
+                const key = `${matchNumber}_${date}`;
+                if (!groups[key]) {
+                    groups[key] = {
+                        name: `Match ${matchNumber} - ${shortDate}`,
+                        date,
+                        MainID: null,
+                        QKID: null
+                    };
+                }
+                if (/Main/i.test(name)) {
+                    groups[key].MainID = id;
+                }
+                if (/QuadKids/i.test(name)) {
+                    groups[key].QKID = id;
+                }
+            });
+            // Return as sorted array of objects
+            return Object.values(groups).sort((a, b) => a.date.localeCompare(b.date));
+        }
+
+        function Live() {
+            const today = new Date().toISOString().split("T")[0]; // "2025-08-17"; - if you want to run a test
+            const matches = document.querySelectorAll("li[data-date]");
+
+            matches.forEach(match => {
+                const matchDate = match.dataset.date;
+
+                if (matchDate === today) {
+                    // LIVE match
+                    const badge = document.createElement("span");
+                    badge.className = "live-badge";
+                    badge.textContent = "LIVE";
+                    match.appendChild(badge);
+
+                    // Add LIVE to accordion header
+                    const accordionItem = match.closest(".accordion-item");
+                    const headerButton = accordionItem.querySelector(".accordion-button");
+
+                    if (!headerButton.querySelector(".live-badge")) {
+                        const headerBadge = document.createElement("span");
+                        headerBadge.className = "live-badge";
+                        headerBadge.textContent = "LIVE";
+                        headerButton.appendChild(headerBadge);
+                    }
+
+                } else if (matchDate < today) {
+                    // Past match → fade it out
+                    match.classList.add("past-match");
+                }
+            });
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            getFiles();
+            setInterval(getFiles, 60 * 60 * 1000);
+        });
+    </script>
 </body>
 </html>
