@@ -114,7 +114,7 @@ function tableGenerator(JSONArr, TableOpt) {
             table += '<tr style="background-color: aliceblue;"><td style="background-color: aliceblue;" colspan="4">'
             table += JSONArr[i][4]
             table += '</td>'
-            table += '<td style="background-color: aliceblue; text-align:right" colspan="3"; >'
+            table += '<td style="background-color: aliceblue; text-align:right" colspan="4"; >'
             table += JSONArr[i][8]
             table += ' '
             table += JSONArr[i][9]
@@ -124,7 +124,7 @@ function tableGenerator(JSONArr, TableOpt) {
             table += '<tr style="background-color: lavenderblush;"><td style="background-color: lavenderblush;" colspan="4">'
             table += JSONArr[i][4]
             table += '</td>'
-            table += '<td style="background-color: lavenderblush; text-align:right" colspan="3"; >'
+            table += '<td style="background-color: lavenderblush; text-align:right" colspan="4"; >'
             table += JSONArr[i][8]
             table += ' '
             table += JSONArr[i][9]
@@ -136,13 +136,15 @@ function tableGenerator(JSONArr, TableOpt) {
             if (TableOpt == "Main") {                           // Display athletes
                 table += `
                 <tr>
-                    <td style="width:8%">${JSONArr[i][4]}</td>
-                    <td style="width:8%">${JSONArr[i][5]}</td>
-                    <td style="width:8%">${JSONArr[i][6]}</td>
-                    <td style="width:43%">${JSONArr[i][7]}</td>
+                    <td style="width:6%">${JSONArr[i][4]}</td>
+                    <td style="width:6%">${JSONArr[i][5].toUpperCase()}</td>
+                    <td style="width:6%">${JSONArr[i][6]}</td>`;
+                table += WindSpeed(JSONArr[i][10]);
+                table += `
+                    <td style="width:40%">${JSONArr[i][7]}</td>
                     <td style="width:5%;"><img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px"></td>
-                    <td style="width:20%">${JSONArr[i][8]}</td>
-                    <td style="width:8%">${JSONArr[i][9]}</td>
+                    <td style="width:25%">${JSONArr[i][8]}</td>
+                    <td style="width:6%; text-align: center">${JSONArr[i][9]}</td>
                 </tr>
                 `;
             }
@@ -184,6 +186,17 @@ function tableGenerator(JSONArr, TableOpt) {
     else if (TableOpt == "QK") {
         document.getElementById('tableResultsQK').innerHTML = table;
     }
+}
+
+function WindSpeed(n) {
+    if (n == "") {
+        return `<td style="width:6%"></td>`;
+    }
+    const colour = n == 0 ? 'black'
+        : ((n > 2 || n < -2) ? 'red' : 'green');
+    const signed = n == 0 ? "0.0"
+        : (n > 0 ? `+${n}` : `-${Math.abs(n)}`);
+    return `<td style="width:6%; text-align: center; color:${colour}">${signed}</td>`;
 }
 function tableGeneratorDeclarations(JSONArr, TableOpt) {
 
@@ -646,8 +659,8 @@ function Pof10(id, opt) {
     const tds = tr.getElementsByTagName('td');
 
     if (tds.length >= 4 && opt=="Main") {
-        var fullname = tds[3].textContent.trim();
-        var club = tds[5].textContent.trim();
+        var fullname = tds[4].textContent.trim();
+        var club = tds[6].textContent.trim();
     }
 
     if (tds.length >= 3 && (opt == "NS" || opt == "QK" || opt == "Declarations")) {
@@ -656,7 +669,7 @@ function Pof10(id, opt) {
     }
   
     var firstname = fullname.substring(0, fullname.indexOf(' '));
-    var surname = fullname.substring(fullname.indexOf(' ') + 1); 
+    var surname = fullname.substring(fullname.lastIndexOf(' ') + 1);
     window.open(
         `https://www.thepowerof10.info/athletes/athleteslookup.aspx?surname=${encodeURIComponent(surname)}&firstname=${encodeURIComponent(firstname)}&club=${encodeURIComponent(club)}`, "_blank", "noopener");
     // todo - don't show for relay teams. Also I don't know how to link straight through to the athlete's page, can;t right click in the browser and copy link address
