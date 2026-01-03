@@ -17,10 +17,10 @@ var PollingTime = 1; // in minutes
 var num = 0;
 var numUpdating = "";
 var pageLoadTimeoutId = null; 
-var TeamFilterMain = "";
-var TeamFilterNS = "";
-var TeamFilterQK = "";
-var TeamFilterDeclarations = "";
+var TeamsFilterMain = "";
+var TeamsFilterNS = "";
+var TeamsFilterQK = "";
+var TeamsFilterDeclarations = "";
 
 setInterval(function () { 
     if (numUpdating == "Updating") {
@@ -356,11 +356,16 @@ async function getJSONData() {
         if (mainRes && mainRes.ok) {
             const data = await mainRes.json();
             JSONArrdataMain = data.text;
+            renderTeamsFilter(
+                JSONArrdataMain,
+                'TeamsFilterMain',
+                applyTeamsFilter.bind(null, '#tableResultsMain', 'TeamsFilterMain', 6)
+            );
+
             const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
             const EventTab1 = filterConditionEvent('Tab1');
             tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
-            renderMainFilterMenu(JSONArrdataMain);
-            updateMainRowVisibility();
+            applyTeamsFilter('#tableResultsMain', 'TeamsFilterMain', 6);
 
             const el = document.getElementById("MessageID");
             el.classList.remove("show");
@@ -374,11 +379,16 @@ async function getJSONData() {
         if (nsRes && nsRes.ok) {
             const data = await nsRes.json();
             JSONArrdataNS = data.text;
+            renderTeamsFilter(
+                JSONArrdataNS,
+                'TeamsFilterNS',
+                applyTeamsFilter.bind(null, '#tableResultsns', 'TeamsFilterNS', 4)
+            );
+
             const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
             const EventTab2 = filterConditionEvent('Tab2');
             tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-            renderU14U20NSFilterMenu(JSONArrdataNS);
-            updateU14U20NSRowVisibility();
+            applyTeamsFilter('#tableResultsNS', 'TeamsFilterNS', 4);
         } else {
             console.error("Error fetching JSON: ns", nsRes);
         }
@@ -387,11 +397,16 @@ async function getJSONData() {
         if (qkRes && qkRes.ok) {
             const data = await qkRes.json();
             JSONArrdataQK = data.text;
+            renderTeamsFilter(
+                JSONArrdataQK,
+                'TeamsFilterQK',
+                applyTeamsFilter.bind(null, '#tableResultsQK', 'TeamsFilterQK', 4)
+            );
+
             const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
             const EventTab3 = filterConditionEvent('Tab3');
             tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
-            renderQKFilterMenu(JSONArrdataQK);
-            updateQKRowVisibility();
+            applyTeamsFilter('#tableResultsQK', 'TeamsFilterQK', 4);
 
             JSONArrdataQKPoints = data.points;
             tableGenerator(JSONArrdataQKPoints, "QKPoints");
@@ -412,11 +427,12 @@ async function getJSONData() {
         if (declarationsRes && declarationsRes.ok) {
             const data = await declarationsRes.json();
             JSONArrdataDeclarations = data.text;
+            renderDeclarationFilterMenu(JSONArrdataDeclarations);
+
             const { filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
             const EventTab5 = filterConditionEvent('Tab5');
             tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
-            renderDeclarationFilterMenu(JSONArrdataDeclarations);
-            updateDeclarationsRowVisibility();
+            applyTeamsFilter('#tableResultsDeclarations', 'declarations-filter', 4);
         } else {
             console.error("Error fetching JSON: declarations", declarationsRes);
         }
@@ -440,25 +456,25 @@ function Refresh(divId) {
         const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
         const EventTab1 = filterConditionEvent('Tab1');
         tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
-        updateMainRowVisibility();
+        applyTeamsFilter('#tableResultsMain', 'TeamsFilterMain', 6);
     }
     else if (divId === 'Tab2') {
         const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
         const EventTab2 = filterConditionEvent('Tab2');
         tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-        updateU14U20NSRowVisibility();
+        applyTeamsFilter('#tableResultsNS', 'TeamsFilterNS', 4);
     }
     else if (divId === 'Tab3') {
         const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
         const EventTab3 = filterConditionEvent('Tab3');
         tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
-        updateQKRowVisibility();
+        applyTeamsFilter('#tableResultsQK', 'TeamsFilterQK', 4);
     }
     else if (divId === 'Tab5') {
             const { filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
             const EventTab5 = filterConditionEvent('Tab5');
             tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
-            updateDeclarationsRowVisibility();
+            applyTeamsFilter('#tableResultsDeclarations', 'declarations-filter', 4);
     }
 }
 
@@ -474,187 +490,80 @@ document.getElementById("btn-back-to-top").addEventListener("click", function ()
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-function renderMainFilterMenu(JSONArr) {
-    const container = document.getElementById('item8-filter-menu');
+function renderTeamsFilter(JSONArr, ID, updateCallback) {
+    const container = document.getElementById(ID);
     if (!container) return;
-
-    // Get distinct, non-empty values of item 8, only from rows where item 7 is not empty
-    const values = [
-        ...new Set(
-            JSONArr
-                .filter(row => row[7] && row[7].trim() !== "") // Exclude rows where item 7 is ""
-                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
-                .filter(v => v)
-        )
-    ].sort();
-    if (TeamFilterMain != values.length) {
-        TeamFilterMain = values.length;
-        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
-        values.forEach(val => {
-            html += `<div class="form-check form-check-inline">
-                <input class="form-check-input item8-filter" type="checkbox" value="${val}" id="${val}" name="${val}" checked>
-                <label class="form-check-label" for="${val}">${val}</label>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    // Individual toggles
-    container.querySelectorAll('.item8-filter').forEach(cb => {
-        cb.addEventListener('change', function () {
-            updateMainRowVisibility();
-        });
-    });
-}
-function updateMainRowVisibility() {
-    const checked = Array.from(document.querySelectorAll('.item8-filter:checked')).map(cb => cb.value);
-    document.querySelectorAll('#tableResultsMain table tr').forEach(tr => {
-        const tds = tr.querySelectorAll('td');
-        if (tds.length === 7) {
-            const val = tds[5].textContent.trim();
-            tr.style.display = checked.includes(val) ? '' : 'none';
-        }
-    });
-}
-
-function renderU14U20NSFilterMenu(JSONArr) {
-    const container = document.getElementById('U14u20ns-filter-menu');
-    if (!container) return;
-
-    const values = [
-        ...new Set(
-            JSONArr
-                .filter(row => row[7] && row[7].trim() !== "") // Exclude rows where item 7 is ""
-                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
-                .filter(v => v)
-        )
-    ].sort();
-    if (TeamFilterNS != values.length) {
-        TeamFilterNS = values.length;
-        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
-        values.forEach(val => {
-            html += `<div class="form-check form-check-inline">
-                <input class="form-check-input U14u20ns-filter" type="checkbox" value="${val}" id="ns-${val}" name="ns-${val}" checked>
-                <label class="form-check-label" for="ns-${val}">${val}</label>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    // Individual toggles
-    container.querySelectorAll('.U14u20ns-filter').forEach(cb => {
-        cb.addEventListener('change', function () {
-            updateU14U20NSRowVisibility();
-        });
-    });
-}
-function updateU14U20NSRowVisibility() {
-    const checked = Array.from(document.querySelectorAll('.U14u20ns-filter:checked')).map(cb => cb.value);
-
-    // Find all rows in the NS table
-    document.querySelectorAll('#tableResultsNS table tr').forEach(tr => {
-      
-        const tds = tr.querySelectorAll('td');
-        if (tds.length === 6) {
-            const val = tds[4].textContent.trim();
-            tr.style.display = checked.includes(val) ? '' : 'none';
-        }
-    });
-}
-
-function renderQKFilterMenu(JSONArr) {
-    const container = document.getElementById('qk-filter-menu');
-    if (!container) return;
-
     const values = [
         ...new Set(
             JSONArr
                 .filter(row => row[7] && row[7].trim() !== "")
-                .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
+                .map(row => row[8] && row[8].normalize().trim())
                 .filter(v => v)
         )
     ].sort();
 
-    if (TeamFilterQK != values.length) {  
-        TeamFilterQK = values.length;
+    if (window[ID] != values.length) {
+        const previous = {};
+        container.querySelectorAll(`.${ID}`).forEach(cb => {
+            previous[cb.value] = cb.checked;
+        });
+        window[ID] = values.length;
+        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+        values.forEach(val => {
+            const isChecked = previous.hasOwnProperty(val) ? previous[val] : true;  // Restore previous state if exists, otherwise default to checked
+            html += `<div class="form-check form-check-inline">
+                <input class="form-check-input ${ID}" type="checkbox" value="${val}" id="${ID}-${val}" name="${ID}-${val}" ${isChecked ? "checked" : ""}>
+                <label class="form-check-label" for="${ID}-${val}">${val}</label>
+            </div>`;
+        });
+        container.innerHTML = html;
+        container.querySelectorAll(`.${ID}`).forEach(cb => {
+            cb.addEventListener('change', updateCallback);
+        });
+    }
+}
+function applyTeamsFilter(tableSelector, checkboxSelector, teamColIndex) {
+    const checked = Array.from(document.querySelectorAll(`.${checkboxSelector}` + ':checked')).map(cb => cb.value);
+    document.querySelectorAll(tableSelector + ' table tr').forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length > teamColIndex) {
+            const val = tds[teamColIndex].textContent.trim();
+            tr.style.display = checked.includes(val) ? '' : 'none';
+        }
+    });
+}
+function renderDeclarationFilterMenu(JSONArr) {  //TO DO after I have fixed JSONDeclarations order
+    const container = document.getElementById('declarations-filter-menu');
+    if (!container) return;
+
+    const values = [
+        ...new Set(
+            JSONArr
+                .filter(row => row[3] && row[3].trim() != "String")
+                .map(row => row[8] && row[8].normalize().trim())
+                .filter(v => v)
+        )
+    ].sort();
+
+    if (TeamsFilterDeclarations != values.length) {
+        TeamsFilterDeclarations = values.length;
         let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
         values.forEach(val => {
             html += `<div class="form-check form-check-inline">
-                <input class="form-check-input qk-filter" type="checkbox" value="${val}" id="qk-${val}" name="qk-${val}" checked>
-                <label class="form-check-label" for="qk-${val}">${val}</label>
+                <input class="form-check-input declarations-filter" type="checkbox" value="${val}" id="declarations-${val}" name="declarations-${val}" checked>
+                <label class="form-check-label" for="declarations-${val}">${val}</label>
             </div>`;
         });
         container.innerHTML = html;
     }
 
     // Individual toggles
-    container.querySelectorAll('.qk-filter').forEach(cb => {
+    container.querySelectorAll('declarations-filter').forEach(cb => {
         cb.addEventListener('change', function () {
-            updateQKRowVisibility();
+            applyTeamsFilter('#tableResultsDeclarations', 'declarations-filter', 4);
         });
     });
 }
-function updateQKRowVisibility() {
-    const checked = Array.from(document.querySelectorAll('.qk-filter:checked')).map(cb => cb.value);
-
-    // Find all rows in the QK table
-    document.querySelectorAll('#tableResultsQK table tr').forEach(tr => {
-       
-        const tds = tr.querySelectorAll('td');
-        if (tds.length === 6) {
-            const val = tds[4].textContent.trim();
-            tr.style.display = checked.includes(val) ? '' : 'none';
-        }
-    });
-}
-
-    function renderDeclarationFilterMenu(JSONArr) {
-        const container = document.getElementById('declarations-filter-menu');
-        if (!container) return;
-
-        const values = [
-            ...new Set(
-                JSONArr
-                    .filter(row => row[3] && row[3].trim() != "String")
-                    .map(row => row[8] && row[8].normalize().trim()) // <-- trim here!
-                    .filter(v => v)
-            )
-        ].sort();
-
-        if (TeamFilterDeclarations != values.length) {
-            TeamFilterDeclarations = values.length;
-            let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
-            values.forEach(val => {
-                html += `<div class="form-check form-check-inline">
-                <input class="form-check-input declarations-filter" type="checkbox" value="${val}" id="declarations-${val}" name="declarations-${val}" checked>
-                <label class="form-check-label" for="declarations-${val}">${val}</label>
-            </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        // Individual toggles
-        container.querySelectorAll('.declarations-filter').forEach(cb => {
-            cb.addEventListener('change', function () {
-                updateDeclarationsRowVisibility();
-            });
-        });
-    }
-    function updateDeclarationsRowVisibility() {
-        const checked = Array.from(document.querySelectorAll('.declarations-filter:checked')).map(cb => cb.value);
-
-        // Find all rows in the QK table
-        document.querySelectorAll('#tableResultsDeclarations table tr').forEach(tr => {
-
-            const tds = tr.querySelectorAll('td');
-           
-            if (tds.length === 6) {
-                const val = tds[4].textContent.trim();
-                tr.style.display = checked.includes(val) ? '' : 'none';
-            }
-        });
-    }
-
 function Pof10(id, opt) {
     const tr = id.closest('tr');
     if (!tr) return;
