@@ -69,7 +69,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item" onclick="pageLoad()">
+                        <li class="nav-item" onclick="getJSONData()">
                             <a class="nav-link" id="IntervalCounter" href="#">Updating.....</a>
                         </li>
                     </ul>
@@ -264,6 +264,8 @@
                 </div>
             </nav>
             <div style="margin-top:10px;" id="tableResultsQK">Initialising...</div>
+            <hr style="height: 3px; background-color: #000; border: none;" />
+            <div style="margin-top:10px;" id="tableResultsQKPoints">Initialising...</div>
         </div>
         <div id="Tab4" class="tab-pane" role="tabpanel">
             <div style="margin-top:10px;" id="tableScores">Initialising...</div>
@@ -339,6 +341,6 @@
     </button>
     <script src="bootstrap.bundle.min.js"></script>
     <script src="index.js"></script>
-    <script type="text/javascript">window.onload = pageLoad();</script>
+    <script type="text/javascript">window.addEventListener("DOMContentLoaded", getJSONData);</script>
 </body>
 </html>

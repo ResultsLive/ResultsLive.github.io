@@ -172,6 +172,18 @@ function tableGenerator(JSONArr, TableOpt) {
                 </tr>
                 `;
             }
+            else if (TableOpt == "QKPoints") {
+                table += `
+                <tr>
+                    <td style="width:6%">${JSONArr[i][2]}</td>
+                    <td style="width:18%">${JSONArr[i][9]} (${JSONArr[i][5]}+${JSONArr[i][6]}+${JSONArr[i][7]}+${JSONArr[i][8]})</td>
+                    <td style="width:43%">${JSONArr[i][3]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:20%">${JSONArr[i][4]}</td>
+                    <td style="width:8%"></td>
+                </tr>
+                `;
+            }
         }
     }
 
@@ -186,8 +198,10 @@ function tableGenerator(JSONArr, TableOpt) {
     else if (TableOpt == "QK") {
         document.getElementById('tableResultsQK').innerHTML = table;
     }
+    else if (TableOpt == "QKPoints") {
+        document.getElementById('tableResultsQKPoints').innerHTML = table;
+    }
 }
-
 function WindSpeed(n) {
     if (n == "") {
         return `<td style="width:6%"></td>`;
@@ -316,116 +330,104 @@ function tableGeneratorScores(JSONArr) {
 
     document.getElementById('tableScores').innerHTML = table;
 }
-function pageLoad() {
-    if (numUpdating == "Updating") { }
-    else {
-        num = PollingTime*60; // declared in seconds
-        if (pageLoadTimeoutId) {clearTimeout(pageLoadTimeoutId);}  
-        pageLoadTimeoutId = setTimeout(pageLoad, num * 1000);
-        numUpdating = "Updating";
 
+async function getJSONData() {
+    if (numUpdating == "Updating") { return; }
+    numUpdating = "Updating";
+    try {
+        num = PollingTime * 60; // declared in seconds
         getFiles();
 
-        const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
-        const EventTab1 = filterConditionEvent('Tab1');
-        fetch(API_ENDPOINTS.main)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
-                }
-                numUpdating = "";  //TOdo need error message on screen if this is the response
-                return response.json();
-            })
-            .then(data => {
-                const el = document.getElementById("MessageID");
-                el.classList.remove("show");
-                el.textContent = data.message;
-                requestAnimationFrame(() => {
-                    el.classList.add("show");      // trigger fade-in
-                });
+        const [
+            mainRes,
+            nsRes,
+            qkRes,
+            scoresRes,
+            declarationsRes
+        ] = await Promise.all([
+            fetch(API_ENDPOINTS.main).catch(e => e),
+            fetch(API_ENDPOINTS.ns).catch(e => e),
+            fetch(API_ENDPOINTS.qk).catch(e => e),
+            fetch(API_ENDPOINTS.scores).catch(e => e),
+            fetch(API_ENDPOINTS.declarations).catch(e => e)
+        ]);
 
-                JSONArrdataMain = data.text;
-                tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
-                renderMainFilterMenu(JSONArrdataMain);
-                updateMainRowVisibility();  //Todo. Make sure newly added entries reflect the checkbox esp team checkboxes
-                numUpdating = "";
-            })
-            .catch(error => {
-                numUpdating = "";
-                console.error("Error fetching JSON:", error); // TODO fix this
-            });
+        // Main
+        if (mainRes && mainRes.ok) {
+            const data = await mainRes.json();
+            JSONArrdataMain = data.text;
+            const { filterConditionAge: AgeTab1, filterConditionSex: SexTab1 } = filterConditionAgeSex('Tab1');
+            const EventTab1 = filterConditionEvent('Tab1');
+            tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
+            renderMainFilterMenu(JSONArrdataMain);
+            updateMainRowVisibility();
 
-        const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
-        const EventTab2 = filterConditionEvent('Tab2');
-        fetch(API_ENDPOINTS.ns)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
-                }
-                return response.json();
-            })
-            .then(data => {
-                JSONArrdataNS = data.text;
-                tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-                renderU14U20NSFilterMenu(JSONArrdataNS);
-                updateU14U20NSRowVisibility();
-            })
-            .catch(error => {
-                console.error("Error fetching JSON:", error); // TODO fix this
-            });
+            const el = document.getElementById("MessageID");
+            el.classList.remove("show");
+            el.textContent = data.message;
+            requestAnimationFrame(() => { el.classList.add("show"); });
+        } else {
+            console.error("Error fetching JSON: main", mainRes);
+        }
 
-        const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
-        const EventTab3 = filterConditionEvent('Tab3');
-        fetch(API_ENDPOINTS.qk)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
-                }
-                return response.json();
-            })
-            .then(data => {
-                JSONArrdataQK = data.text;
-                tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
-                renderQKFilterMenu(JSONArrdataQK);
-                updateQKRowVisibility();
-            })
-            .catch(error => {
-                console.error("Error fetching JSON:", error); // TODO fix this
-            });
+        // NS
+        if (nsRes && nsRes.ok) {
+            const data = await nsRes.json();
+            JSONArrdataNS = data.text;
+            const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
+            const EventTab2 = filterConditionEvent('Tab2');
+            tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
+            renderU14U20NSFilterMenu(JSONArrdataNS);
+            updateU14U20NSRowVisibility();
+        } else {
+            console.error("Error fetching JSON: ns", nsRes);
+        }
 
-        fetch(API_ENDPOINTS.scores)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
-                }
-                return response.json();
-            })
-            .then(data => {
-                JSONArrdataScores = data.text;
-                tableGeneratorScores(JSONArrdataScores);
-            })
-            .catch(error => {
-                console.error("Error fetching JSON:", error); // TODO fix this
-            });
+        // QK
+        if (qkRes && qkRes.ok) {
+            const data = await qkRes.json();
+            JSONArrdataQK = data.text;
+            const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
+            const EventTab3 = filterConditionEvent('Tab3');
+            tableGenerator(JSONArrdataQK.filter(AgeTab3).filter(SexTab3).filter(EventTab3), "QK");
+            renderQKFilterMenu(JSONArrdataQK);
+            updateQKRowVisibility();
 
-        const {filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
-        const EventTab5 = filterConditionEvent('Tab5');
-        fetch(API_ENDPOINTS.declarations)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);// TODO fix this
-                }
-                return response.json();
-            })
-            .then(data => {
-                JSONArrdataDeclarations = data.text;
-                tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
-                renderDeclarationFilterMenu(JSONArrdataDeclarations);
-                updateDeclarationsRowVisibility();  //Todo. Make sure newly added entries reflect the checkbox esp team checkboxes               
-            })
-            .catch(error => {
-                console.error("Error fetching JSON:", error); // TODO fix this
-            });
+            JSONArrdataQKPoints = data.points;
+            tableGenerator(JSONArrdataQKPoints, "QKPoints");
+        } else {
+            console.error("Error fetching JSON: qk", qkRes);
+        }
+
+        // Scores
+        if (scoresRes && scoresRes.ok) {
+            const data = await scoresRes.json();
+            JSONArrdataScores = data.text;
+            tableGeneratorScores(JSONArrdataScores);
+        } else {
+            console.error("Error fetching JSON: scores", scoresRes);
+        }
+
+        // Declarations
+        if (declarationsRes && declarationsRes.ok) {
+            const data = await declarationsRes.json();
+            JSONArrdataDeclarations = data.text;
+            const { filterConditionAge: AgeTab5, filterConditionSex: SexTab5 } = filterConditionAgeSex('Tab5');
+            const EventTab5 = filterConditionEvent('Tab5');
+            tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
+            renderDeclarationFilterMenu(JSONArrdataDeclarations);
+            updateDeclarationsRowVisibility();
+        } else {
+            console.error("Error fetching JSON: declarations", declarationsRes);
+        }
+
+    } finally {
+        // Always clear and reschedule
+        numUpdating = "";
+        if (pageLoadTimeoutId) {
+            clearTimeout(pageLoadTimeoutId);
+        }
+        pageLoadTimeoutId = setTimeout(getJSONData, num * 1000);
     }
 }
 function Refresh(divId) {
@@ -676,15 +678,13 @@ function Pof10(id, opt) {
 }
 
 
-  function getFiles() {
-    fetch(API_ENDPOINTS.list)
-        .then(response => {
+async function getFiles() {
+    try {
+        const response = await fetch(API_ENDPOINTS.list);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();
-        })
-        .then(data => {
+        const data = await response.json();
             const name = findNameById(data, Main);
             const el = document.getElementById("Title_Text");
             el.classList.remove("show");     
@@ -692,10 +692,10 @@ function Pof10(id, opt) {
                 requestAnimationFrame(() => {
                     el.classList.add("show");      // trigger fade-in
                 });
-        })
-        .catch(error => {
+         }
+         catch (error) {
             console.error("Error fetching JSON:", error); // TODO fix this
-        });
+         }
     }
     function findNameById(node, targetId) {
         if (node.id === targetId) {
