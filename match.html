@@ -37,310 +37,486 @@
     </style>
 </head>
 
-<body style="padding-top:10px; min-height:1000px">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding:0px;">
-            <!--fixed-top-->
-            <div class="container">
-                <a class="navbar-brand fade-in" href="index.html" id="Title_Text"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
-                        aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span>Menu</span>
-                </button>
-                <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav nav-pills me-auto nav-fill" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab1" role="tab" aria-selected="false">U14-U17 Scoring</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab2" role="tab" aria-selected="false">U14-U20 Non Scoring</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab3" role="tab" aria-selected="false">QuadKids</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab4" role="tab" aria-selected="false">Team Scores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U14-U20 Declarations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#Tab0" role="tab" aria-selected="true">Help</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item" onclick="getJSONData()">
-                            <a class="nav-link" id="IntervalCounter" href="#">Updating.....</a>
-                        </li>
-                    </ul>
+    <body style="padding-top:10px; min-height:1000px">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding:0px;">
+                <!--fixed-top-->
+                <div class="container">
+                    <a class="navbar-brand fade-in" href="index.html" id="Title_Text"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+                            aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span>Menu</span>
+                    </button>
+                    <div id="navbar" class="collapse navbar-collapse">
+                        <ul class="nav nav-pills me-auto nav-fill" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab1" role="tab" aria-selected="false">U14-U18 Scoring</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab2" role="tab" aria-selected="false">U14-U20 Non Scoring</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab3" role="tab" aria-selected="false">QuadKids</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab4" role="tab" aria-selected="false">Team Scores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U14-U20 Declarations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#Tab0" role="tab" aria-selected="true">Help</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item" onclick="getJSONData()">
+                                <a class="nav-link" id="IntervalCounter" href="#">Updating.....</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="tab-content">
+                <div id="Tab0" class="tab-pane show active" role="tabpanel">
+                    <div style="margin-top:20px; padding-left:10px" id="tableResults0">
+                        This is a live results page, there is no need to refresh the page as it will automatically check for new results every minute.
+                        <br /><br />Click through the top menu links (the top menu will be displayed as 'Menu' on a mobile phone) to select the set of results you want ie U14-17 Scoring, U14-U20 Non Scoring or QuadKids. The 'U14-U20 Declarations' link lists all the athletes that have declared for a particular event. Each page can be filtered by age, sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
+                        <br /><br />Clicking on the Power of 10 icon <img src="Pof10a.jpg" width="26px"> next to an athlete's name will take you through to that athlete's Power of 10 listing.
+                        <!-- <br /><br />Wind speed doesn't currently show on the result pages but if it is being recorded it will be on the results sent to the Power of 10.-->
+                        <br /><br /><div class="fade-in" id="MessageID" style="font-weight:bold; white-space: pre-line;"></div>
+                        <br />Any bugs/suggestions/other queries please email mylesfleming07@gmail.com.
+                    </div>
+                </div>
+                <div id="Tab1" class="tab-pane" role="tabpanel">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh(this)" style="padding:0;">
+                        <div class="container">
+                            <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar1"
+                                    aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
+                                <span>Options</span>
+                            </button>
+                            <div id="navbar1" class="collapse navbar-collapse justify-content-center row text-center">
+                                <div class="col-auto" id="age-group1">
+                                    <label>Age:</label>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
+                                            U13
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                            U14
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
+                                            U15
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U16" name="U16" checked>
+                                            U16
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
+                                            U17
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U18" name="U18" checked>
+                                            U18
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U19" name="U19" checked>
+                                            U19
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
+                                            U20
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Sex:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
+                                            Male
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Events:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
+                                            Track
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
+                                            Field
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto" id="TeamsFilterMain"></div>
+                                <div class="col-auto">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="CheckboxController(this)">
+                                            Show All
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Hide" name="Hide" onclick="CheckboxController(this)">
+                                            Hide All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div style="margin-top:10px;" id="tableResultsMain">Initialising...</div>
+                </div>
+                <div id="Tab2" class="tab-pane" role="tabpanel">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh(this)" style="padding:0;">
+                        <div class="container">
+                            <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar2"
+                                    aria-controls="navbar2" aria-expanded="false" aria-label="Toggle navigation">
+                                <span>Options</span>
+                            </button>
+                            <div id="navbar2" class="collapse navbar-collapse justify-content-center row text-center">
+                                <div class="col-auto" id="age-group2">
+                                    <label>Age:</label>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
+                                            U13
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                            U14
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
+                                            U15
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U16" name="U16" checked>
+                                            U16
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
+                                            U17
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U18" name="U18" checked>
+                                            U18
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U19" name="U19" checked>
+                                            U19
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
+                                            U20
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Sex:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
+                                            Male
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Events:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
+                                            Track
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
+                                            Field
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto" id="TeamsFilterNS"></div>
+                                <div class="col-auto">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="CheckboxController(this)">
+                                            Show All
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Hide" name="Hide" onclick="CheckboxController(this)">
+                                            Hide All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div style="margin-top:10px;" id="tableResultsNS">Initialising...</div>
+                </div>
+                <div id="Tab3" class="tab-pane" role="tabpanel">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh(this)" style="padding:0;">
+                        <div class="container">
+                            <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar3"
+                                    aria-controls="navbar3" aria-expanded="false" aria-label="Toggle navigation">
+                                <span>Options</span>
+                            </button>
+                            <div id="navbar3" class="collapse navbar-collapse justify-content-center row text-center">
+                                <div class="col-auto" id="age-group3">
+                                    <label>Age:</label>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U9" name="U9" checked>
+                                            U9
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U10" name="U10" checked>
+                                            U10
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U11" name="U11" checked>
+                                            U11
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U12" name="U12" checked>
+                                            U12
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Sex:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
+                                            Male
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Events:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
+                                            Track
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
+                                            Field
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto" id="TeamsFilterQK"></div>
+                                <div class="col-auto">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="CheckboxController(this)">
+                                            Show All
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Hide" name="Hide" onclick="CheckboxController(this)">
+                                            Hide All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div style="margin-top:10px;" id="tableResultsQK">Initialising...</div>
+                    <hr style="height: 3px; background-color: #000; border: none;" />
+                    <div style="margin-top:10px;" id="tableResultsQKPoints">Initialising...</div>
+                </div>
+                <div id="Tab4" class="tab-pane" role="tabpanel">
+                    <div style="margin-top:10px;" id="tableScores">Initialising...</div>
+                </div>
+                <div id="Tab5" class="tab-pane" role="tabpanel">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh(this)" style="padding:0;">
+                        <div class="container">
+                            <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar5"
+                                    aria-controls="navbar5" aria-expanded="false" aria-label="Toggle navigation">
+                                <span>Options</span>
+                            </button>
+                            <div id="navbar5" class="collapse navbar-collapse justify-content-center row text-center">
+                                <div class="col-auto" id="age-group5">
+                                    <label>Age:</label>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U13" name="U13" checked>
+                                            U13
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
+                                            U14
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
+                                            U15
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U16" name="U16" checked>
+                                            U16
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
+                                            U17
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U18" name="U18" checked>
+                                            U18
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U19" name="U19" checked>
+                                            U19
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
+                                            U20
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Sex:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
+                                            Male
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Events:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
+                                            Track
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
+                                            Field
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto" id="declarations-filter-menu"></div>
+                                <div class="col-auto">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="CheckboxController(this)">
+                                            Show All
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Hide" name="Hide" onclick="CheckboxController(this)">
+                                            Hide All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div style="margin-top:10px;" id="tableResultsDeclarations">Initialising...</div>
                 </div>
             </div>
-        </nav>
-       
-    <div class="tab-content">
-        <div id="Tab0" class="tab-pane show active" role="tabpanel">
-            <div style="margin-top:20px; padding-left:10px" id="tableResults0">
-                This is a live results page, there is no need to refresh the page as it will automatically check for new results every minute.
-                <br /><br />Click through the top menu links (the top menu will be displayed as 'Menu' on a mobile phone) to select the set of results you want ie U14-17 Scoring, U14-U20 Non Scoring or QuadKids. The 'U14-U20 Declarations' link lists all the athletes that have declared for a particular event. Each page can be filtered by age, sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
-                <br /><br />Clicking on the Power of 10 icon <img src="Pof10a.jpg" width="26px"> next to an athlete's name will take you through to that athlete's Power of 10 listing.
-                <!-- <br /><br />Wind speed doesn't currently show on the result pages but if it is being recorded it will be on the results sent to the Power of 10.-->
-                <br /><br /><div class="fade-in" id="MessageID" style="font-weight:bold; white-space: pre-line;"></div>
-                <br />Any bugs/suggestions/other queries please email mylesfleming07@gmail.com.
-            </div>
         </div>
-        <div id="Tab1" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab1')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar1"
-                            aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar1" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="TeamsFilterMain"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab1')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsMain">Initialising...</div>
-        </div>
-        <div id="Tab2" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab2')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar2"
-                            aria-controls="navbar2" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar2" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
-                                <label class="form-check-label" for="U20">U20</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="TeamsFilterNS"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab2')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsNS">Initialising...</div>
-        </div>
-        <div id="Tab3" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab3')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar3"
-                            aria-controls="navbar3" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar3" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U9" name="U9" checked>
-                                <label class="form-check-label" for="U9">U9</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U11" name="U11" checked>
-                                <label class="form-check-label" for="U11">U11</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="TeamsFilterQK"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab3')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsQK">Initialising...</div>
-            <hr style="height: 3px; background-color: #000; border: none;" />
-            <div style="margin-top:10px;" id="tableResultsQKPoints">Initialising...</div>
-        </div>
-        <div id="Tab4" class="tab-pane" role="tabpanel">
-            <div style="margin-top:10px;" id="tableScores">Initialising...</div>
-        </div>
-        <div id="Tab5" class="tab-pane" role="tabpanel">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh('Tab5')" style="padding:0;">
-                <div class="container">
-                    <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar5"
-                            aria-controls="navbar5" aria-expanded="false" aria-label="Toggle navigation">
-                        <span>Options</span>
-                    </button>
-                    <div id="navbar5" class="collapse navbar-collapse justify-content-center row text-center">
-                        <div class="col-auto">
-                            <label>Age:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U14" name="U14" checked>
-                                <label class="form-check-label" for="U14">U14</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U15" name="U15" checked>
-                                <label class="form-check-label" for="U15">U15</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U17" name="U17" checked>
-                                <label class="form-check-label" for="U17">U17</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="U20" name="U20" checked>
-                                <label class="form-check-label" for="U20">U20</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Sex:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
-                                <label class="form-check-label" for="Female">Female</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
-                                <label class="form-check-label" for="Male">Male</label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label>Events:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Track" name="Track" checked>
-                                <label class="form-check-label" for="Track">Track</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="Field" name="Field" checked>
-                                <label class="form-check-label" for="Field">Field</label>
-                            </div>
-                        </div>
-                        <div class="col-auto" id="declarations-filter-menu"></div>
-                        <div class="col-auto">
-                            <label>Show All:</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="SelectAll('Tab5')">
-                                <label class="form-check-label" for="All">All</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div style="margin-top:10px;" id="tableResultsDeclarations">Initialising...</div>
-        </div>
-    </div>
-    </div>
-    <button type="button" class="btn btn-danger" id="btn-back-to-top"
-            style="position: fixed; bottom: 20px; right: 20px; display: none;">
-        Top
-    </button>
-    <script src="bootstrap.bundle.min.js"></script>
-    <script src="index.js"></script>
-    <script type="text/javascript">window.addEventListener("DOMContentLoaded", getJSONData);</script>
-</body>
+        <button type="button" class="btn btn-danger" id="btn-back-to-top"
+                style="position: fixed; bottom: 20px; right: 20px; display: none;">
+            Top
+        </button>
+        <script src="bootstrap.bundle.min.js"></script>
+        <script src="index.js"></script>
+        <script type="text/javascript">window.addEventListener("DOMContentLoaded", getJSONData);</script>
+    </body>
 </html>
