@@ -5,10 +5,8 @@ const params = new URLSearchParams(window.location.search);
 const Main = params.get('Main');
 const QK = params.get('QK');
 const API_ENDPOINTS = {
-    main: `${API_BASE_URL}/JSONMain/${Main}`,
-    ns:     `${API_BASE_URL}/JSONNS`,
-    qk: `${API_BASE_URL}/JSONQK/${QK}`,
-    scores: `${API_BASE_URL}/JSONScores`,
+    main: `${API_BASE_URL}/JSONMain`,
+    qk: `${API_BASE_URL}/JSONQK`,
     list: `${API_BASE_URL}/listappfolder`
 };
 
@@ -17,9 +15,10 @@ var num = 0;
 var numUpdating = "";
 var pageLoadTimeoutId = null; 
 var TeamsFilterMain = "";
-var TeamsFilterNS = "";
 var TeamsFilterQK = "";
 var TeamsFilterDeclarations = "";
+var mainlastcachecreated = "";
+var qklastcachecreated = "";
 
 setInterval(function () { 
     if (numUpdating == "Updating") {
@@ -182,18 +181,6 @@ function tableGenerator(JSONArr, TableOpt) {
                 </tr>
                 `;
             }
-            else if (TableOpt == "NS") {
-                table += `
-                <tr>
-                    <td style="width:12%">${JSONArr[i][5]}</td>
-                    <td style="width:12%">${JSONArr[i][6]}</td>
-                    <td style="width:43%">${JSONArr[i][7]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'NS')" src="Pof10a.jpg" width="26px"></td>
-                    <td style="width:20%">${JSONArr[i][8]}</td>
-                    <td style="width:8%"></td><!-- ToDO: select PB awards level for NS -->
-                </tr>
-                `;
-            }
             else if (TableOpt == "QK") {
                 table += `
                 <tr>
@@ -225,9 +212,6 @@ function tableGenerator(JSONArr, TableOpt) {
 
     if (TableOpt == "Main") {
         document.getElementById('tableResultsMain').innerHTML = table;
-    }
-    else if (TableOpt == "NS") {
-        document.getElementById('tableResultsNS').innerHTML = table;
     }
     else if (TableOpt == "QK") {
         document.getElementById('tableResultsQK').innerHTML = table;
@@ -310,68 +294,188 @@ function tableGeneratorDeclarations(JSONArr, TableOpt) {
 }
 function tableGeneratorScores(JSONArr) {
     let table = '';
+    let tableOpen = false;
 
-    table += '<table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>';
+    const closeTable = () => {
+        if (tableOpen) {
+            table += `</tbody></table>`;
+            tableOpen = false;
+        }
+    };
 
     for (let i = 0; i < JSONArr.length; i++) {
 
-        if ([i] == 0) {                                                  
-          //  table += `<tr><td colspan="3" style="text-align:center">${JSONArr[i][0]}</td></tr>`;
+        if (i === 9 || i === 19 || i === 30 || i === 40 || i === 50 || i === 60 || i === 71 || i === 81) {
+            closeTable();
+            continue;
         }
-        else if ([i] == 1) { }
-        else if ([i] == 2) {                                                  
-           // table += `<tr><td colspan="3" style="text-align:center">${JSONArr[i][1]} - ${JSONArr[i][2]}</td></tr>`;
+
+        if (i === 0 || i === 10 || i === 20 || i === 31) {
+            const nextValue = JSONArr[i + 1]?.[1] ?? "";
+            if (nextValue !== "") {
+                closeTable();
+                table += `
+                    <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
+                    <tr style="background-color: aliceblue;">
+                        <td style="background-color: aliceblue; width:20%">${JSONArr[i][1]}</td>
+                        <td style="background-color: aliceblue; width:60%">${JSONArr[i][0]}</td>
+                        <td style="background-color: aliceblue; width:20%">${JSONArr[i][2]}</td>
+                    </tr>`;
+                tableOpen = true;
+            }
+            continue;
         }
-        else if ([i] == 3) { }
-        else if ([i] == 13 || [i] == 23 || [i] == 33 || [i] == 43 || [i] == 53 || [i] == 63) {              
-            table += `</tbody></table><table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
-                `;
+        if (i === 41) {
+            table += `<div>&nbsp<div>`;
         }
-        else if ([i] == 4 || [i] == 14 || [i] == 24) {                                     
+        if (i === 41 || i === 51 || i === 61 || i === 72) {
+            const nextValue = JSONArr[i + 1]?.[1] ?? "";
+            if (nextValue !== "") {
+                closeTable();
+                table += `
+                    <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
+                    <tr style="background-color: lavenderblush;">
+                        <td style="background-color: lavenderblush; width:20%">${JSONArr[i][1]}</td>
+                        <td style="background-color: lavenderblush; width:60%">${JSONArr[i][0]}</td>
+                        <td style="background-color: lavenderblush; width:20%">${JSONArr[i][2]}</td>
+                    </tr>`;
+                tableOpen = true;
+            }
+            continue;
+        }
+
+        if (i === 82) {
+            table += `<div>&nbsp<div>`;
+        }
+        if (i === 82) {
+            closeTable();
             table += `
-                <tr style="background-color: aliceblue;">
-                    <td style="background-color: aliceblue;">${JSONArr[i][1]}</td>
-                    <td style="background-color: aliceblue;">${JSONArr[i][0]}</td>
-                    <td style="background-color: aliceblue;">${JSONArr[i][2]}</td>  
-                </tr>
-                `;
-        }
-        else if ([i] == 34 || [i] == 44 || [i] == 54 ) {                               
-            table += `
-                <tr style="background-color: lavenderblush;">
-                    <td style="background-color: lavenderblush;">${JSONArr[i][1]}</td>
-                    <td style="background-color: lavenderblush;">${JSONArr[i][0]}</td>
-                    <td style="background-color: lavenderblush;">${JSONArr[i][2]}</td>  
-                </tr>
-                `;
-        }
-        else if ([i] == 64 ) {                                
-            table += `
+                <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
                 <tr style="background-color: lemonchiffon;">
-                    <td style="background-color: lemonchiffon;">${JSONArr[i][1]}</td>
-                    <td style="background-color: lemonchiffon;">${JSONArr[i][0]}</td>
-                    <td style="background-color: lemonchiffon;">${JSONArr[i][2]}</td>  
-                </tr>
-                `;
+                    <td style="background-color: lemonchiffon; width:20%">${JSONArr[i][1]}</td>
+                    <td style="background-color: lemonchiffon; width:60%">${JSONArr[i][0]}</td>
+                    <td style="background-color: lemonchiffon; width:20%">${JSONArr[i][2]}</td>
+                </tr>`;
+            tableOpen = true;
+            continue;
         }
-        else if (JSONArr[i][0] == "0" || JSONArr[i][0] == "") {                     
+
+        // --- SKIP EMPTY ROWS ---
+        if (JSONArr[i][0] === "0" || JSONArr[i][0] === "" || JSONArr[i][1] === "") {
+            continue;
         }
-        else {                                                  // Display recorded athletes
+
+        // --- NORMAL ROW ---
+        if (tableOpen) {
             table += `
                 <tr>
-                     <td>${JSONArr[i][1]}</td>
-                     <td>${JSONArr[i][0]}</td>
-                     <td>${JSONArr[i][2]}</td>    
-                </tr>
-                `;
+                    <td>${JSONArr[i][1]}</td>
+                    <td>${JSONArr[i][0]}</td>
+                    <td>${JSONArr[i][2]}</td>
+                </tr>`;
         }
     }
 
-    table += '</tbody></table><div>&nbsp </div><div>&nbsp </div>';
+    // Final close
+    closeTable();
 
+    table += `<div>&nbsp;</div><div>&nbsp;</div>`;
     document.getElementById('tableScores').innerHTML = table;
 }
+function tableGeneratorScoresQK(JSONArr) {
+    let table = '';
+    let tableOpen = false;
 
+    const closeTable = () => {
+        if (tableOpen) {
+            table += `</tbody></table>`;
+            tableOpen = false;
+        }
+    };
+
+    for (let i = 0; i < JSONArr.length; i++) {
+
+        if (i === 9 || i === 19 || i === 29 || i === 39 || i === 49) {
+            closeTable();
+            continue;
+        }
+
+        if (i === 0 || i === 10) {
+            const nextValue = JSONArr[i + 1]?.[1] ?? "";
+            if (nextValue !== "") {
+                closeTable();
+                table += `
+                    <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
+                    <tr style="background-color: aliceblue;">
+                        <td style="background-color: aliceblue; width:20%">${JSONArr[i][1]}</td>
+                        <td style="background-color: aliceblue; width:60%">${JSONArr[i][0]}</td>
+                        <td style="background-color: aliceblue; width:20%">${JSONArr[i][2]}</td>
+                    </tr>`;
+                tableOpen = true;
+            }
+            continue;
+        }
+        if (i === 20) {
+            table += `<div>&nbsp<div>`;
+        }
+        if (i === 20 || i === 30 ) {
+            const nextValue = JSONArr[i + 1]?.[1] ?? "";
+            if (nextValue !== "") {
+                closeTable();
+                table += `
+                    <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
+                    <tr style="background-color: lavenderblush;">
+                        <td style="background-color: lavenderblush; width:20%">${JSONArr[i][1]}</td>
+                        <td style="background-color: lavenderblush; width:60%">${JSONArr[i][0]}</td>
+                        <td style="background-color: lavenderblush; width:20%">${JSONArr[i][2]}</td>
+                    </tr>`;
+                tableOpen = true;
+            }
+            continue;
+        }
+
+        if (i === 40) {
+            table += `<div>&nbsp<div>`;
+        }
+        if (i === 40) {
+            closeTable();
+            table += `
+                <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
+                <tr style="background-color: lemonchiffon;">
+                    <td style="background-color: lemonchiffon; width:20%">Position</td>
+                    <td style="background-color: lemonchiffon; width:60%">Overall QuadKids Team</td>
+                    <td style="background-color: lemonchiffon; width:20%">Points</td>
+                </tr>`;
+            tableOpen = true;
+            continue;
+        }
+        if (i === 41) {
+            continue;
+        }
+
+
+        // --- SKIP EMPTY ROWS ---
+        if (JSONArr[i][0] === "0" || JSONArr[i][0] === "" || JSONArr[i][1] === "") {
+            continue;
+        }
+
+        // --- NORMAL ROW ---
+        if (tableOpen) {
+            table += `
+                <tr>
+                    <td>${JSONArr[i][1]}</td>
+                    <td>${JSONArr[i][0]}</td>
+                    <td>${JSONArr[i][2]}</td>
+                </tr>`;
+        }
+    }
+
+    // Final close
+    closeTable();
+
+    table += `<div>&nbsp;</div><div>&nbsp;</div>`;
+    document.getElementById('tableScoresQK').innerHTML = table;
+}
 async function getJSONData() {
     if (numUpdating == "Updating") { return; }
     numUpdating = "Updating";
@@ -380,21 +484,22 @@ async function getJSONData() {
         getFiles();
 
         const [
-            mainRes,
-            nsRes,
-            qkRes,
-            scoresRes
+          mainRes,
+            qkRes
         ] = await Promise.all([
-            fetch(API_ENDPOINTS.main).catch(e => e),
-            fetch(API_ENDPOINTS.ns).catch(e => e),
-            fetch(API_ENDPOINTS.qk).catch(e => e),
-            fetch(API_ENDPOINTS.scores).catch(e => e)
+            fetch(`${API_ENDPOINTS.main}?cacheCreated=${mainlastcachecreated}&fileID=${Main}`).catch(e => e),
+            fetch(`${API_ENDPOINTS.qk}?cacheCreated=${qklastcachecreated}&fileID=${QK}`).catch(e => e)
         ]);
 
+        
+   
         // Main
         if (mainRes && mainRes.ok) {
             const data = await mainRes.json();
 
+            // If no changes, exit
+            if (data.result === "No changes") { return;}
+            
             // Message
             const el = document.getElementById("MessageID");
             el.classList.remove("show");
@@ -406,7 +511,6 @@ async function getJSONData() {
             const distinctCol0 = [...new Set(JSONArrdataMain.filter(row => row[3] && row[3].trim() !== "")   
                         .map(row => row[0]).filter(v => v && v.trim() !== ""))];
             const navbar1 = document.getElementById('age-group1');
-
             if (navbar1) {
                 navbar1.querySelectorAll('.form-check.form-check-inline').forEach(div => {
                     div.style.display = 'none';
@@ -453,52 +557,24 @@ async function getJSONData() {
             tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
             applyTeamsFilter('#tableResultsDeclarations', 'declarations-filter', 4);
 
+            // Scores
+            JSONArrdataScores = data.scores;
+            tableGeneratorScores(JSONArrdataScores);
+
+            // Update last cache created
+            mainlastcachecreated = data.CachedCreated;
+
         } else {
             console.error("Error fetching JSON: main", mainRes);
         }
-
-        // NS
-        if (nsRes && nsRes.ok) {
-            const data = await nsRes.json();
-
-            JSONArrdataNS = data.text;
-            const distinctCol0NS = [...new Set(JSONArrdataNS.filter(row => row[3] && row[3].trim() !== "")
-                .map(row => row[0]).filter(v => v && v.trim() !== ""))];
-            const navbar2 = document.getElementById('age-group2');
-            if (navbar2) {
-                navbar2.querySelectorAll('.form-check.form-check-inline').forEach(div => {
-                    div.style.display = 'none';
-                });
-                distinctCol0NS.forEach(val => {
-                    const input = navbar2.querySelector(`input[type="checkbox"]#${CSS.escape(val)}`);
-                    if (input) {
-                        const wrapper = input.closest('.form-check');
-                        if (wrapper) {
-                            wrapper.style.display = 'inline-block';
-                        }
-                    }
-                });
-            }
-
-
-
-            renderTeamsFilter(
-                JSONArrdataNS,
-                'TeamsFilterNS',
-                applyTeamsFilter.bind(null, '#tableResultsns', 'TeamsFilterNS', 4)
-            );
-
-            const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
-            const EventTab2 = filterConditionEvent('Tab2');
-            tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-            applyTeamsFilter('#tableResultsNS', 'TeamsFilterNS', 4);
-        } else {
-            console.error("Error fetching JSON: ns", nsRes);
-        }
-
+           
         // QK
         if (qkRes && qkRes.ok) {
             const data = await qkRes.json();
+
+            // If no changes, exit
+            if (data.result === "No changes") { return; }
+
             JSONArrdataQK = data.text;
             const distinctCol0QK = [...new Set(JSONArrdataQK.filter(row => row[3] && row[3].trim() !== "")
                 .map(row => row[0]).filter(v => v && v.trim() !== ""))];
@@ -530,18 +606,20 @@ async function getJSONData() {
 
             JSONArrdataQKPoints = data.points;
             tableGenerator(JSONArrdataQKPoints, "QKPoints");
+
+            // Scores
+            JSONArrdataQKScores = data.scores;
+            tableGeneratorScoresQK(JSONArrdataQKScores);
+
+            // Update last cache created
+            qklastcachecreated = data.CachedCreated;
+
+
         } else {
             console.error("Error fetching JSON: qk", qkRes);
         }
 
-        // Scores
-        if (scoresRes && scoresRes.ok) {
-            const data = await scoresRes.json();
-            JSONArrdataScores = data.text;
-            tableGeneratorScores(JSONArrdataScores);
-        } else {
-            console.error("Error fetching JSON: scores", scoresRes);
-        }
+       
 
     } finally {
         // Always clear and reschedule
@@ -563,12 +641,6 @@ function Refresh(divId) {
         const EventTab1 = filterConditionEvent('Tab1');
         tableGenerator(JSONArrdataMain.filter(AgeTab1).filter(SexTab1).filter(EventTab1), "Main");
         applyTeamsFilter('#tableResultsMain', 'TeamsFilterMain', 6);
-    }
-    else if (container === 'Tab2') {
-        const { filterConditionAge: AgeTab2, filterConditionSex: SexTab2 } = filterConditionAgeSex('Tab2');
-        const EventTab2 = filterConditionEvent('Tab2');
-        tableGenerator(JSONArrdataNS.filter(AgeTab2).filter(SexTab2).filter(EventTab2), "NS");
-        applyTeamsFilter('#tableResultsNS', 'TeamsFilterNS', 4);
     }
     else if (container === 'Tab3') {
         const { filterConditionAge: AgeTab3, filterConditionSex: SexTab3 } = filterConditionAgeSex('Tab3');
@@ -680,7 +752,7 @@ function Pof10(id, opt) {
         var club = tds[6].textContent.trim();
     }
 
-    if (tds.length >= 3 && (opt == "NS" || opt == "QK" || opt == "Declarations")) {
+    if (tds.length >= 3 && (opt == "QK" || opt == "Declarations")) {
         var fullname = tds[2].textContent.trim();
         var club = tds[4].textContent.trim();
     }
