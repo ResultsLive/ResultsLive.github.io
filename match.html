@@ -62,6 +62,9 @@
                                 <a class="nav-link" data-bs-toggle="tab" href="#Tab5" role="tab" aria-selected="false">U14-U20 Declarations</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#Tab6" role="tab" aria-selected="false">QuadKids Declarations</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#Tab0" role="tab" aria-selected="true">Help</a>
                             </li>
                         </ul>
@@ -397,6 +400,77 @@
                         </div>
                     </nav>
                     <div style="margin-top:10px;" id="tableResultsDeclarations">Initialising...</div>
+                </div>
+                <div id="Tab6" class="tab-pane" role="tabpanel">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light" onclick="Refresh(this)" style="padding:0;">
+                        <div class="container">
+                            <span class="navbar-brand" href="#" style="font-size: large">Filters</span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar6"
+                                    aria-controls="navbar6" aria-expanded="false" aria-label="Toggle navigation">
+                                <span>Options</span>
+                            </button>
+                            <div id="navbar6" class="collapse navbar-collapse justify-content-center row text-center">
+                                <div class="col-auto" id="age-group6">
+                                    <label>Age:</label>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U9" name="U9" checked>
+                                            U9
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U10" name="U10" checked>
+                                            U10
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U11" name="U11" checked>
+                                            U11
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline" style="display:none">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="U12" name="U12" checked>
+                                            U12
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label>Sex:</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Female" name="Female" checked>
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Male" name="Male" checked>
+                                            Male
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto" id="QKdeclarations-filter-menu"></div>
+                                <div class="col-auto">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="All" name="All" checked onclick="CheckboxController(this)">
+                                            Show All
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="Hide" name="Hide" onclick="CheckboxController(this)">
+                                            Hide All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <div style="margin-top:10px;" id="tableResultsQKDeclarations">Initialising...</div>
                 </div>
             </div>
         </div>

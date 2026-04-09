@@ -17,6 +17,7 @@ var pageLoadTimeoutId = null;
 var TeamsFilterMain = "";
 var TeamsFilterQK = "";
 var TeamsFilterDeclarations = "";
+var TeamsFilterQKDeclarations = "";
 var mainlastcachecreated = "";
 var qklastcachecreated = "";
 
@@ -280,6 +281,16 @@ function tableGeneratorDeclarations(JSONArr, TableOpt) {
                 </tr>
                 `;
             }
+            else if (TableOpt == "QKDeclarations") {                           // Display athletes
+                table += `
+                <tr>
+                    <td style="width:15%">${JSONArr[i][5]}</td>
+                    <td style="width:50%">${JSONArr[i][7]}</td>
+                    <td style="width:5%;"><img onclick="Pof10(this,'QKDeclarations')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:30%">${JSONArr[i][8]}</td> 
+                </tr>
+                `;
+            }
            
         }
     }
@@ -288,6 +299,9 @@ function tableGeneratorDeclarations(JSONArr, TableOpt) {
 
     if (TableOpt == "Declarations") {
         document.getElementById('tableResultsDeclarations').innerHTML = table;
+    }
+    if (TableOpt == "QKDeclarations") {
+        document.getElementById('tableResultsQKDeclarations').innerHTML = table;
     }
   
 
@@ -351,10 +365,10 @@ function tableGeneratorScores(JSONArr) {
             closeTable();
             table += `
                 <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
-                <tr style="background-color: lemonchiffon;">
-                    <td style="background-color: lemonchiffon; width:20%">${JSONArr[i][1]}</td>
-                    <td style="background-color: lemonchiffon; width:60%">${JSONArr[i][0]}</td>
-                    <td style="background-color: lemonchiffon; width:20%">${JSONArr[i][2]}</td>
+                <tr style="background-color: WhiteSmoke;">
+                    <td style="background-color: WhiteSmoke; width:20%">${JSONArr[i][1]}</td>
+                    <td style="background-color: WhiteSmoke; width:60%">${JSONArr[i][0]}</td>
+                    <td style="background-color: WhiteSmoke; width:20%">${JSONArr[i][2]}</td>
                 </tr>`;
             tableOpen = true;
             continue;
@@ -441,10 +455,10 @@ function tableGeneratorScoresQK(JSONArr) {
             closeTable();
             table += `
                 <table class="table" style="width:80%; margin-left:auto; margin-right:auto;"><tbody>
-                <tr style="background-color: lemonchiffon;">
-                    <td style="background-color: lemonchiffon; width:20%">Position</td>
-                    <td style="background-color: lemonchiffon; width:60%">Overall QuadKids Team</td>
-                    <td style="background-color: lemonchiffon; width:20%">Points</td>
+                <tr style="background-color: WhiteSmoke;">
+                    <td style="background-color: WhiteSmoke; width:20%">Position</td>
+                    <td style="background-color: WhiteSmoke; width:60%">Overall QuadKids Team</td>
+                    <td style="background-color: WhiteSmoke; width:20%">Points</td>
                 </tr>`;
             tableOpen = true;
             continue;
@@ -607,6 +621,35 @@ async function getJSONData() {
             JSONArrdataQKPoints = data.points;
             tableGenerator(JSONArrdataQKPoints, "QKPoints");
 
+            // Declarations
+            JSONArrdataQKDeclarations = data.declarations;
+            console.log(JSONArrdataQKDeclarations);
+            const distinctCol0QKDec = [...new Set(JSONArrdataQKDeclarations.filter(row => row[3] && row[3].trim() !== "")
+                .map(row => row[0]).filter(v => v && v.trim() !== ""))];
+            const navbar6 = document.getElementById('age-group6');
+            if (navbar6) {
+                navbar6.querySelectorAll('.form-check.form-check-inline').forEach(div => {
+                    div.style.display = 'none';
+                });
+                distinctCol0QKDec.forEach(val => {
+                    const input = navbar6.querySelector(`input[type="checkbox"]#${CSS.escape(val)}`);
+                    if (input) {
+                        const wrapper = input.closest('.form-check');
+                        if (wrapper) {
+                            wrapper.style.display = 'inline-block';
+                        }
+                    }
+                });
+            }
+            renderDeclarationQKFilterMenu(JSONArrdataQKDeclarations);
+            const { filterConditionAge: AgeTab6, filterConditionSex: SexTab6 } = filterConditionAgeSex('Tab6');
+            tableGeneratorDeclarations(JSONArrdataQKDeclarations.filter(AgeTab6).filter(SexTab6), "QKDeclarations");
+            applyTeamsFilter('#tableResultsQKDeclarations', 'QKdeclarations-filter', 3);
+
+
+
+
+
             // Scores
             JSONArrdataQKScores = data.scores;
             tableGeneratorScoresQK(JSONArrdataQKScores);
@@ -653,6 +696,11 @@ function Refresh(divId) {
             const EventTab5 = filterConditionEvent('Tab5');
             tableGeneratorDeclarations(JSONArrdataDeclarations.filter(AgeTab5).filter(SexTab5).filter(EventTab5), "Declarations");
             applyTeamsFilter('#tableResultsDeclarations', 'declarations-filter', 4);
+    }
+    else if (container === 'Tab6') {
+        const { filterConditionAge: AgeTab6, filterConditionSex: SexTab6 } = filterConditionAgeSex('Tab6');
+        tableGeneratorDeclarations(JSONArrdataQKDeclarations.filter(AgeTab6).filter(SexTab6), "QKDeclarations");
+        applyTeamsFilter('#tableResultsQKDeclarations', 'QKdeclarations-filter', 3);
     }
 }
 
@@ -742,6 +790,39 @@ function renderDeclarationFilterMenu(JSONArr) {  //TO DO after I have fixed JSON
         });
     });
 }
+
+function renderDeclarationQKFilterMenu(JSONArr) {  //TO DO after I have fixed JSONDeclarations order
+    const container = document.getElementById('QKdeclarations-filter-menu');
+    if (!container) return;
+
+    const values = [
+        ...new Set(
+            JSONArr
+                .filter(row => row[3] && row[3].trim() != "")
+                .map(row => row[8] && row[8].normalize().trim())
+                .filter(v => v)
+        )
+    ].sort();
+
+    if (TeamsFilterQKDeclarations != values.length) {
+        TeamsFilterQKDeclarations = values.length;
+        let html = '<div class="form-check form-check-inline" style="margin-right:6px;"><label>Teams:</label></div>';
+        values.forEach(val => {
+            html += `<div class="form-check form-check-inline">
+                <input class="form-check-input QKdeclarations-filter" type="checkbox" value="${val}" id="QKdeclarations-${val}" name="QKdeclarations-${val}" checked>
+                <label class="form-check-label" for="QKdeclarations-${val}">${val}</label>
+            </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // Individual toggles
+    container.querySelectorAll('QKdeclarations-filter').forEach(cb => {
+        cb.addEventListener('change', function () {
+            applyTeamsFilter('#tableResultsQKDeclarations', 'QKdeclarations-filter', 3);
+        });
+    });
+}
 function Pof10(id, opt) {
     const tr = id.closest('tr');
     if (!tr) return;
@@ -752,9 +833,13 @@ function Pof10(id, opt) {
         var club = tds[6].textContent.trim();
     }
 
-    if (tds.length >= 3 && (opt == "QK" || opt == "Declarations")) {
+    if (tds.length >= 3 && (opt == "QK" || opt == "Declarations" )) {
         var fullname = tds[2].textContent.trim();
         var club = tds[4].textContent.trim();
+    }
+    if (tds.length >= 3 && opt == "QKDeclarations") {
+        var fullname = tds[1].textContent.trim();
+        var club = tds[3].textContent.trim();
     }
   
     var firstname = fullname.substring(0, fullname.indexOf(' '));
