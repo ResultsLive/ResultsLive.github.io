@@ -176,7 +176,7 @@ function tableGenerator(JSONArr, TableOpt) {
                 table += WindSpeed(JSONArr[i][10]);
                 table += `
                     <td style="width:40%">${JSONArr[i][7]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:5%;"></td><!-- <img onclick="Pof10(this,'Main')" src="Pof10a.jpg" width="26px"></td> -->
                     <td style="width:25%">${JSONArr[i][8]}</td>
                     <td style="width:6%; text-align: center">${JSONArr[i][9]}</td>
                 </tr>
@@ -188,7 +188,7 @@ function tableGenerator(JSONArr, TableOpt) {
                     <td style="width:12%">${JSONArr[i][5]}</td>
                     <td style="width:12%">${JSONArr[i][6]}</td>
                     <td style="width:43%">${JSONArr[i][7]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:5%;"></td><!-- <img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td> -->
                     <td style="width:20%">${JSONArr[i][8]}</td>
                     <td style="width:8%">${JSONArr[i][9]}</td>
                 </tr>
@@ -200,7 +200,7 @@ function tableGenerator(JSONArr, TableOpt) {
                     <td style="width:6%">${JSONArr[i][2]}</td>
                     <td style="width:18%">${JSONArr[i][9]} (${JSONArr[i][5]}+${JSONArr[i][6]}+${JSONArr[i][7]}+${JSONArr[i][8]})</td>
                     <td style="width:43%">${JSONArr[i][3]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:5%;"></td><!-- <img onclick="Pof10(this,'QK')" src="Pof10a.jpg" width="26px"></td> -->
                     <td style="width:20%">${JSONArr[i][4]}</td>
                     <td style="width:8%"></td>
                 </tr>
@@ -276,7 +276,7 @@ function tableGeneratorDeclarations(JSONArr, TableOpt) {
                     <td style="width:15%">${JSONArr[i][3]}</td>
                     <td style="width:15%">${JSONArr[i][5]}</td>
                     <td style="width:45%">${JSONArr[i][7]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'Declarations')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:5%;"></td><!-- <img onclick="Pof10(this,'Declarations')" src="Pof10a.jpg" width="26px"></td> -->
                     <td style="width:20%">${JSONArr[i][8]}</td> 
                 </tr>
                 `;
@@ -286,7 +286,7 @@ function tableGeneratorDeclarations(JSONArr, TableOpt) {
                 <tr>
                     <td style="width:15%">${JSONArr[i][5]}</td>
                     <td style="width:50%">${JSONArr[i][7]}</td>
-                    <td style="width:5%;"><img onclick="Pof10(this,'QKDeclarations')" src="Pof10a.jpg" width="26px"></td>
+                    <td style="width:5%;"></td><!-- <img onclick="Pof10(this,'QKDeclarations')" src="Pof10a.jpg" width="26px"></td> -->
                     <td style="width:30%">${JSONArr[i][8]}</td> 
                 </tr>
                 `;
