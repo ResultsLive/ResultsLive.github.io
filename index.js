@@ -522,7 +522,7 @@ async function getJSONData() {
 
             // Results
             JSONArrdataMain = data.text;
-            const distinctCol0 = [...new Set(JSONArrdataMain.filter(row => row[3] && row[3].trim() !== "")   
+            const distinctCol0 = [...new Set(JSONArrdataMain.filter(row => row[3] && row[3].trim() !== "")
                         .map(row => row[0]).filter(v => v && v.trim() !== ""))];
             const navbar1 = document.getElementById('age-group1');
             if (navbar1) {
