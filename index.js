@@ -512,7 +512,7 @@ async function getJSONData() {
             const data = await mainRes.json();
 
             // If no changes, exit
-            if (data.result === "No changes") { return;}
+            if (data.result !== "No changes") {
             
             // Message
             const el = document.getElementById("MessageID");
@@ -522,7 +522,7 @@ async function getJSONData() {
 
             // Results
             JSONArrdataMain = data.text;
-            const distinctCol0 = [...new Set(JSONArrdataMain.filter(row => row[3] && row[3].trim() !== "")
+            const distinctCol0 = [...new Set(JSONArrdataMain.filter(row => row[3] && row[3].trim() !== "")   
                         .map(row => row[0]).filter(v => v && v.trim() !== ""))];
             const navbar1 = document.getElementById('age-group1');
             if (navbar1) {
@@ -577,7 +577,7 @@ async function getJSONData() {
 
             // Update last cache created
             mainlastcachecreated = data.CachedCreated;
-
+            }
         } else {
             console.error("Error fetching JSON: main", mainRes);
         }
@@ -587,7 +587,7 @@ async function getJSONData() {
             const data = await qkRes.json();
 
             // If no changes, exit
-            if (data.result === "No changes") { return; }
+            if (data.result !== "No changes") {
 
             JSONArrdataQK = data.text;
             const distinctCol0QK = [...new Set(JSONArrdataQK.filter(row => row[3] && row[3].trim() !== "")
@@ -656,7 +656,7 @@ async function getJSONData() {
 
             // Update last cache created
             qklastcachecreated = data.CachedCreated;
-
+            }
 
         } else {
             console.error("Error fetching JSON: qk", qkRes);
