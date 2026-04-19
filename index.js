@@ -860,7 +860,8 @@ async function getFiles() {
             const name = findNameById(data, Main);
             const el = document.getElementById("Title_Text");
             el.classList.remove("show");     
-            el.textContent = formatFilename(name);
+        if (!name) {el.textContent = "** Return to Home **";}
+        else {el.textContent = formatFilename(name);}
                 requestAnimationFrame(() => {
                     el.classList.add("show");      // trigger fade-in
                 });
