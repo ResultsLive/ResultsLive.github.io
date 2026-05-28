@@ -517,7 +517,7 @@ async function getJSONData() {
             // Message
             const el = document.getElementById("MessageID");
             el.classList.remove("show");
-            el.textContent = data.message;
+            el.innerHTML = data.message;
             requestAnimationFrame(() => { el.classList.add("show"); });
 
             // Results
