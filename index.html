@@ -86,6 +86,30 @@
 
         <div class="accordion" id="accordionExample">
 
+            <!-- SAL League -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSAL26">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseSAL26"
+                            aria-expanded="false"
+                            aria-controls="collapseSAL26">
+                        Southern Athletics Leageue — 2026
+                        <!--<a style="margin-left:auto" href="top5.html?League=Wessex Young Athletes Track and Field League 2026" class="accordion-link">Top 5 Results</a>-->
+                    </button>
+
+                </h2>
+                <div id="collapseSAL26"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="headingSAL26">
+                    <div class="accordion-body">
+                        <ul class="mb-0" id="SAL-results-list26">Loading...</ul>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Wessex League -->
             <div class="accordion-item" style="display:none">
                 <h2 class="accordion-header" id="headingWessex25">
@@ -183,7 +207,7 @@
 
         const API_ENDPOINTS = {list: `${API_BASE_URL}/listappfolder`};
 
-        const collapseIds = ["collapseOxon25", "collapseOxon26", "collapseWessex25", "collapseWessex26"];
+        const collapseIds = ["collapseOxon25", "collapseOxon26", "collapseWessex25", "collapseWessex26", "collapseSAL26"];
 
         const collapses = collapseIds.map(id => new bootstrap.Collapse(document.getElementById(id), { toggle: false }));
 
@@ -221,6 +245,7 @@
                     populateLeagueList("OTFL", "2026", "oxon-results-list26");
                     populateLeagueList("Wessex", "2025", "wessex-results-list25");
                     populateLeagueList("Wessex", "2026", "wessex-results-list26");
+                    populateLeagueList("SAL", "2026", "SAL-results-list26");
 
                     Live();
                     collapses.forEach(c => c.show())

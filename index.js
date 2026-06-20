@@ -102,6 +102,7 @@ function filterConditionAgeSex(divId) {
     if (container.querySelector('#U18')?.checked) allowedCategoriesAge.push("U18");
     if (container.querySelector('#U19')?.checked) allowedCategoriesAge.push("U19");
     if (container.querySelector('#U20')?.checked) allowedCategoriesAge.push("U20");
+    if (container.querySelector('#Senior')?.checked) allowedCategoriesAge.push("Senior");
 
     let allowedCategoriesSex = [];
     if (container.querySelector('#Female')?.checked) allowedCategoriesSex.push("F");
@@ -864,6 +865,7 @@ async function getFiles() {
         else {el.textContent = formatFilename(name);}
                 requestAnimationFrame(() => {
                     el.classList.add("show");      // trigger fade-in
+                    adjustTabsForSAL(el.textContent);
                 });
          }
          catch (error) {
@@ -903,3 +905,60 @@ async function getFiles() {
     }
 
 
+
+function adjustTabsForSAL(titleText) {
+    try {
+        const isSAL = (titleText || "").toUpperCase().includes("SAL");
+        const tab0 = document.getElementById('tableResults0');
+
+        if (!isSAL) return;
+
+        // Rename Tab1 link text to "Results"
+        const tab1Link = document.querySelector('a[data-bs-toggle="tab"][href="#Tab1"]');
+        if (tab1Link) tab1Link.textContent = "Results";
+
+        // Hide nav items and panes for Tab3, Tab4, Tab5, Tab6
+        [3, 4, 5, 6].forEach(n => {
+            const link = document.querySelector(`a[data-bs-toggle="tab"][href="#Tab${n}"]`);
+            if (link) {
+                const li = link.closest("li");
+                if (li) li.style.display = "none";
+            }
+            const pane = document.getElementById(`Tab${n}`);
+            if (pane) pane.style.display = "none";
+        });
+
+        // Replace the long "Click through the top menu links..." paragraph in Tab0 with SAL-specific text
+        if (tab0) {
+            const html = tab0.innerHTML;
+            const startMarker = "Click through the top menu links";
+            const messageIdMarker = '<div class="fade-in" id="MessageID"';
+            const startIdx = html.indexOf(startMarker);
+            const msgIdx = html.indexOf(messageIdMarker);
+
+            if (startIdx !== -1 && msgIdx !== -1 && msgIdx > startIdx) {
+                const before = html.slice(0, startIdx);
+                const after = html.slice(msgIdx); // preserve MessageID and following content
+
+                const replacement = `
+                    <div>
+                        This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window.
+                        <br/><u>For this system all athletes are recorded as 'Senior', in the formal results the correct age groups will be applied</u>
+                    </div>
+                `;
+
+                tab0.innerHTML = before + replacement + after;
+            } else {
+                // Fallback: attempt a safer string replace if markers not found exactly
+                const fallbackPattern = /Click through the top menu links[\s\S]*?(?=<div class="fade-in" id="MessageID")/i;
+                if (fallbackPattern.test(html)) {
+                    tab0.innerHTML = html.replace(fallbackPattern, `
+                                                 This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window. <br/><u>For this system all athletes are recorded as 'Senior', in the formal results the correct age groups will be applied</u>
+                    `);
+                }
+            }
+        }
+    } catch (e) {
+        console.error("adjustTabsForSAL error:", e);
+    }
+}
