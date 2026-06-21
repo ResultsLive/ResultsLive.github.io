@@ -942,7 +942,7 @@ function adjustTabsForSAL(titleText) {
 
                 const replacement = `
                     <div>
-                        This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window.
+                        This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window. *** There has been a problem with the main SAL file so Non Scoring Numbers will display incorrectly ****
                         <br/><br/>Click 'Results' in the top menu (the top menu will be displayed as 'Menu' on a mobile phone) to view the results. The Results page can be filtered by sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
 
 
