@@ -961,7 +961,7 @@ function adjustTabsForSAL(titleText) {
                                                  This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window.
                                                   Click 'Results' in the top menu (the top menu will be displayed as 'Menu' on a mobile phone) to view the results. The Results page can be filtered by sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
 
-                                                 <br/><u>For this system all athletes are recorded as 'Senior', in the formal results the correct age groups will be applied</u>
+                                                 <br/><u>For this system all athletes are recorded as 'Senior', in the formal results the correct age groups will be applied  </u>
                     `);
                 }
             }
