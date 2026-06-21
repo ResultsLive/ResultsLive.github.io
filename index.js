@@ -942,7 +942,7 @@ function adjustTabsForSAL(titleText) {
 
                 const replacement = `
                     <div>
-                        This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window. *** There has been a problem with the main SAL file so Non Scoring Numbers will display incorrectly ****
+                        This a <b>quick attempt</b> to get live results for SAL events. *** There was a problem with the main SAL file so Non Scoring athletes had to be entered manually. If your name is spelt wrong please email us at web@otfl.org.uk ****
                         <br/><br/>Click 'Results' in the top menu (the top menu will be displayed as 'Menu' on a mobile phone) to view the results. The Results page can be filtered by sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
 
 
@@ -958,8 +958,8 @@ function adjustTabsForSAL(titleText) {
                 const fallbackPattern = /Click through the top menu links[\s\S]*?(?=<div class="fade-in" id="MessageID")/i;
                 if (fallbackPattern.test(html)) {
                     tab0.innerHTML = html.replace(fallbackPattern, `
-                                                 This a <b>quick attempt</b> to get live results for SAL events. We will also be sticking the results in the window.
-                                                  <br/><br/>Click 'Results' in the top menu (the top menu will be displayed as 'Menu' on a mobile phone) to view the results. The Results page can be filtered by sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
+                                                  This a <b>quick attempt</b> to get live results for SAL events. *** There was a problem with the main SAL file so Non Scoring Numbers had to be entered manually. If your name is spelt wrong please email us at web@otfl.org.uk ****
+                        <br/><br/>Click 'Results' in the top menu (the top menu will be displayed as 'Menu' on a mobile phone) to view the results. The Results page can be filtered by sex, track events, field events or club (on a mobile phone click 'Options' to see these filters).
 
                                                  <br/><br/><u>For this system all athletes are recorded as 'Senior', in the formal results the correct age groups will be applied  </u>
                     `);
